@@ -19,8 +19,9 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 
+import com.example.privateex.pandorasurvey.R;
 import com.example.privateex.pandorasurvey.SecondSurvey;
-import chasetech.com.PandoraSurvey.R;
+
 public class FirstQuestions extends Fragment {
 
     Dialog dialogOthers;
