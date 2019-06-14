@@ -6,6 +6,8 @@ import android.view.KeyEvent;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
+import chasetech.com.PandoraSurvey.R;
+
 public class EndScreen extends AppCompatActivity {
 
     ImageView imgPandora;

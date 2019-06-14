@@ -15,6 +15,8 @@ import android.widget.LinearLayout;
 import com.example.privateex.pandorasurvey.Fragments.FirstQuestions;
 import com.example.privateex.pandorasurvey.Fragments.SecondQuestions;
 
+import chasetech.com.PandoraSurvey.R;
+
 public class SecondSurvey extends AppCompatActivity {
 
     public static ViewPager viewPager;

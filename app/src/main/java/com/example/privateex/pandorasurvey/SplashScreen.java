@@ -9,6 +9,10 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
+import com.example.privateex.pandorasurvey.MainActivity;
+
+import chasetech.com.PandoraSurvey.R;
+
 public class SplashScreen extends AppCompatActivity {
 
     ImageView imgPandora;
