@@ -1,0 +1,26 @@
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fillAfter="true"
+    android:interpolator="@android:anim/linear_interpolator" >
+
+
+    <!-- Move -->
+    <scale
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:duration="1000"
+        android:fromXScale="0"
+        android:fromYScale="0"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:toXScale="1"
+        android:toYScale="1" >
+    </scale>
+
+    <!-- Rotate 180 degrees -->
+    <rotate
+        android:duration="500"
+        android:fromDegrees="0"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:toDegrees="360" />
+
+</set>

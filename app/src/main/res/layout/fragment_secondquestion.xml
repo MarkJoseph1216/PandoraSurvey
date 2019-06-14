@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:textStyle="bold"
+        android:id="@+id/txtTitle"
+        android:textSize="28sp"
+        android:typeface="serif"
+        android:layout_marginTop="15dp"
+        android:layout_centerInParent="true"
+        android:layout_alignParentTop="true"
+        android:text="Question #2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/txtQuestion2"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/txtTitle"
+        android:layout_marginLeft="25dp"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:typeface="serif"
+        android:text="Do you buy PANDORA for gifting to loved ones or friends?"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <CheckBox
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="25dp"
+        android:layout_below="@+id/txtQuestion2"
+        android:id="@+id/chckYes"
+        android:textSize="24sp"
+        android:typeface="serif"
+        android:text="Yes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <CheckBox
+        android:textSize="24sp"
+        android:typeface="serif"
+        android:layout_marginLeft="40dp"
+        android:layout_toRightOf="@+id/chckYes"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/txtQuestion2"
+        android:text="No"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/txtQuestion3"
+        android:textStyle="bold"
+        android:textSize="24sp"
+        android:typeface="serif"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="25dp"
+        android:layout_below="@+id/chckYes"
+        android:text="How did you learn about the new collections of PANDORA?"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <CheckBox
+        android:textSize="24sp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="25dp"
+        android:layout_below="@+id/txtQuestion3"
+        android:text="Newspaper"
+        android:id="@+id/chckNewsPaper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <CheckBox
+        android:id="@+id/chckMagazine"
+        android:textSize="24sp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/txtQuestion3"
+        android:layout_toRightOf="@+id/chckNewsPaper"
+        android:text="Magazine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <CheckBox
+        android:id="@+id/chckSocialMedia"
+        android:textSize="24sp"
+        android:layout_marginLeft="64dp"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/txtQuestion3"
+        android:layout_toRightOf="@+id/chckMagazine"
+        android:text="Social Media"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <CheckBox
+        android:id="@+id/chckBillboard"
+        android:textSize="24sp"
+        android:layout_marginLeft="26dp"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/chckSocialMedia"
+        android:text="Billboard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <CheckBox
+        android:textSize="24sp"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="52dp"
+        android:layout_below="@+id/chckMagazine"
+        android:layout_toRightOf="@+id/chckBillboard"
+        android:id="@+id/chckFriendFamily"
+        android:text="Friend/Family"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <CheckBox
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_toRightOf="@+id/chckFriendFamily"
+        android:layout_below="@+id/chckSocialMedia"
+        android:textSize="24sp"
+        android:text="Store Visit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btnFinish"
+        android:background="@drawable/shape"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        android:typeface="serif"
+        android:text="FINISH"
+        android:layout_marginRight="40dp"
+        android:layout_marginBottom="25dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

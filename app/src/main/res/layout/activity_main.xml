@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    tools:context="com.example.privateex.pandorasurvey.MainActivity">
+
+   <ImageView
+       android:id="@+id/imgLucerne"
+       android:layout_marginTop="70dp"
+       android:layout_alignParentTop="true"
+       android:layout_centerInParent="true"
+       android:background="@drawable/pandoralogo"
+       android:layout_width="600dp"
+       android:layout_height="240dp" />
+
+    <TextView
+        android:typeface="serif"
+        android:visibility="invisible"
+        android:id="@+id/txtSurvey"
+        android:textSize="20sp"
+        android:layout_above="@+id/btnGetStarted"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="35dp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:layout_centerInParent="true"
+        android:text="Lucerne Survey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ProgressBar
+        android:visibility="invisible"
+        android:layout_above="@+id/btnGetStarted"
+        android:id="@+id/loadingBar"
+        android:indeterminateTint="@color/white"
+        android:layout_marginBottom="18dp"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/txtLoading"
+        android:visibility="invisible"
+        android:typeface="serif"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:text="Wait to proceed....."
+        android:layout_centerInParent="true"
+        android:layout_below="@+id/loadingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:textStyle="bold"
+        android:typeface="serif"
+        android:layout_marginTop="50dp"
+        android:id="@+id/btnGetStarted"
+        android:text="GET STARTED"
+        android:layout_centerInParent="true"
+        style="@style/ButtonBorder.Accent"
+        android:layout_below="@+id/imgLucerne"
+        android:layout_width="180dp"
+        android:layout_height="60dp" />
+
+</RelativeLayout>

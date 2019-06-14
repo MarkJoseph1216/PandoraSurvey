@@ -1,0 +1,13 @@
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fillAfter="true" >
+
+    <scale
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:fromAlpha="-5"
+        android:fromYScale="-5"
+        android:toXScale="1"
+        android:toYScale="1"
+        android:duration="1300">
+    </scale>
+
+</set>

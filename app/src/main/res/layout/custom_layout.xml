@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_margin="15dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:id="@+id/txtQuestion"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="25dp"
+        android:textStyle="bold"
+        android:textSize="28sp"
+        android:typeface="serif"
+        android:text="Question #1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_below="@+id/txtQuestion"
+        android:layout_marginTop="20dp"
+        android:id="@+id/txtTitle"
+        android:layout_marginLeft="25dp"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:typeface="serif"
+        android:text="Please check if you have any of these social media accounts:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:id="@+id/layout"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/txtTitle"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <CheckBox
+            android:layout_marginRight="15dp"
+            android:id="@+id/chckFacebook"
+            android:textSize="24sp"
+            android:text="Facebook"
+            android:layout_marginLeft="25dp"
+            android:typeface="serif"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <CheckBox
+            android:layout_marginRight="15dp"
+            android:text="Instagram"
+            android:id="@+id/chckInstagram"
+            android:typeface="serif"
+            android:textSize="24sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <CheckBox
+            android:layout_marginRight="15dp"
+            android:text="Twitter"
+            android:id="@+id/chckTwitter"
+            android:typeface="serif"
+            android:textSize="24sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <CheckBox
+            android:layout_marginRight="15dp"
+            android:text="Snapchat"
+            android:id="@+id/chckSnapchat"
+            android:typeface="serif"
+            android:textSize="24sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <CheckBox
+            android:layout_marginRight="5dp"
+            android:text="Others"
+            android:id="@+id/chckOthers"
+            android:typeface="serif"
+            android:textSize="24sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/txtOthers"
+            android:text="_______________________"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtQuestion2"
+        android:layout_marginTop="40dp"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:typeface="serif"
+        android:layout_marginLeft="25dp"
+        android:layout_below="@+id/layout"
+        android:text="Which of these PANDORA products do you own:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <CheckBox
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="25dp"
+        android:layout_below="@+id/txtQuestion2"
+        android:layout_marginRight="5dp"
+        android:text="Bracelet"
+        android:id="@+id/chckBracelet"
+        android:typeface="serif"
+        android:textSize="24sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <CheckBox
+        android:textSize="24sp"
+        android:typeface="serif"
+        android:layout_marginLeft="23dp"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/txtQuestion2"
+        android:layout_toRightOf="@id/chckBracelet"
+        android:id="@+id/chckCharm"
+        android:text="Charm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <CheckBox
+        android:textSize="24sp"
+        android:typeface="serif"
+        android:layout_marginLeft="58dp"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/txtQuestion2"
+        android:id="@+id/chckNecklace"
+        android:layout_toRightOf="@+id/chckCharm"
+        android:text="Necklace"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <CheckBox
+        android:id="@+id/chckRing"
+        android:text="Ring"
+        android:textSize="24sp"
+        android:typeface="serif"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="25dp"
+        android:layout_below="@+id/chckBracelet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <CheckBox
+        android:textSize="24sp"
+        android:text="Earrings"
+        android:typeface="serif"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="70dp"
+        android:layout_toRightOf="@+id/chckRing"
+        android:layout_below="@+id/chckCharm"
+        android:id="@+id/chckEarrings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btnNext"
+        android:background="@drawable/shape"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        android:typeface="serif"
+        android:text="NEXT"
+        android:layout_marginRight="40dp"
+        android:layout_marginBottom="25dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>
