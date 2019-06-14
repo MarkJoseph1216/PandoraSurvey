@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import chasetech.com.PandoraSurvey.R;
+
 public class  MainActivity extends AppCompatActivity {
 
     ImageView imgLucerne;

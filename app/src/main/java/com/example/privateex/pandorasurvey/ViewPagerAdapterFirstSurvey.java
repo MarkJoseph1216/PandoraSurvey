@@ -11,6 +11,8 @@ import android.widget.ImageView;
 
 import java.util.List;
 
+import chasetech.com.PandoraSurvey.R;
+
 public class ViewPagerAdapterFirstSurvey extends PagerAdapter {
 
     private Context context;
