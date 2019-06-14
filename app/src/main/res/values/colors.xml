@@ -10,4 +10,6 @@
     <color name="black">#000000</color>
     <color name="colorTransparent">#00ffffff</color>
     <color name="white">#ffffff</color>
+    <color name="skyRed">#f74444</color>
+    <color name="green">#51a151</color>
 </resources>

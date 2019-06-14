@@ -1,7 +1,10 @@
 package com.example.privateex.pandorasurvey;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
@@ -11,13 +14,12 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
-
-
 
 public class FirstSurvey extends AppCompatActivity {
 
@@ -26,6 +28,7 @@ public class FirstSurvey extends AppCompatActivity {
     ImageView imgName, imgEmail, imgMobile, imgDate;
     Calendar myCalendar;
     Button btnSubmit;
+    Button btnCancel, btnEnter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +72,6 @@ public class FirstSurvey extends AppCompatActivity {
         inputFirst.setVisibility(View.VISIBLE);
         inputLast.startAnimation(AnimationUtils.loadAnimation(FirstSurvey.this, R.anim.fade_in));
         inputLast.setVisibility(View.VISIBLE);
-
         myCalendar = Calendar.getInstance();
 
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
@@ -147,7 +149,6 @@ public class FirstSurvey extends AppCompatActivity {
         String currentDate = mdformat.format(calendar.getTime());
 
         edtBirthDate.setText(currentDate);
-
     }
 
     private void updateEdtBirth() {
