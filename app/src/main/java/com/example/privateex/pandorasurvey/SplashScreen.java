@@ -11,7 +11,6 @@ import android.widget.ImageView;
 
 import com.example.privateex.pandorasurvey.MainActivity;
 
-import chasetech.com.PandoraSurvey.R;
 
 public class SplashScreen extends AppCompatActivity {
 

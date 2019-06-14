@@ -11,8 +11,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.privateex.pandorasurvey.EndScreen;
+import com.example.privateex.pandorasurvey.R;
 
-import chasetech.com.PandoraSurvey.R;
 public class SecondQuestions extends Fragment {
 
     Button btnFinish;

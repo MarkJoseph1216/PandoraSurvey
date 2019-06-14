@@ -17,7 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-import chasetech.com.PandoraSurvey.R;
+
 
 public class FirstSurvey extends AppCompatActivity {
 
