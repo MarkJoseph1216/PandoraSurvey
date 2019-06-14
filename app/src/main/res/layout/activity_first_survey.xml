@@ -200,7 +200,7 @@
             android:textColor="@color/whiteGray"
             android:textColorHint="@color/whiteGray"
             android:backgroundTint="@color/black"
-            android:hint="Click here to pick a date"
+            android:hint="Click here to pick a Birth Date"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </android.support.design.widget.TextInputLayout>
