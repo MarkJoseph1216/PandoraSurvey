@@ -3,9 +3,8 @@ package com.example.privateex.pandorasurvey.Survey;
 import android.app.Application;
 
 public class Survey extends Application{
-    public static String host = "http://192.168.100.102:8000";
-
-    public static String url_branches = host + "/api/branches";
+    public static String host = "http://pandora.luxxeserver.com";
+    public static String url_branches = host + "/api/survey/branches";
 
     public static String url_test_imei_registered = host + "/api/survey/imei/registered";
 
