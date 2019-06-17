@@ -206,7 +206,7 @@ public class FirstSurvey extends AppCompatActivity {
 
     private void getParseJSONRegister() {
         String URL_DATA_REGISTER = "http://ad9b44d6.ngrok.io/register.php/";
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, Survey.url_create_product, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, Survey.url_create_costumer, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
@@ -243,6 +243,7 @@ public class FirstSurvey extends AppCompatActivity {
                 params.put("lastname", edtLastName.getText().toString());
                 params.put("email", edtEmail.getText().toString());
                 params.put("mobile", edtMobile.getText().toString());
+                params.put("date_of_birth",edtBirthDate.getText().toString());
 
                 return params;
             }
