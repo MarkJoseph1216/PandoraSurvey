@@ -12,8 +12,24 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.privateex.pandorasurvey.Survey.Survey;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 
 public class  MainActivity extends AppCompatActivity {
@@ -24,6 +40,9 @@ public class  MainActivity extends AppCompatActivity {
     ProgressBar loadingBar;
     Dialog dialogSettings;
     Button btnCancel, btnEnter;
+    Spinner chooseBranch;
+    String[] branches;
+    private RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +57,12 @@ public class  MainActivity extends AppCompatActivity {
         loadingBar = (ProgressBar) findViewById(R.id.loadingBar);
 
         dialogSettings = new Dialog(MainActivity.this);
+        requestQueue = Volley.newRequestQueue(this);
+
+        loadBranches();
 
         imgLucerne.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.zoomin));
-        btnGetStarted.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.downtoup));
+        //btnGetStarted.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.downtoup));
         btnSettings.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.downtoup));
 
         final Handler handler = new Handler();
@@ -87,6 +109,10 @@ public class  MainActivity extends AppCompatActivity {
         dialogSettings.setContentView(R.layout.dialog_settings);
         btnCancel = (Button) dialogSettings.findViewById(R.id.btnCancel);
         btnEnter = (Button) dialogSettings.findViewById(R.id.btnEnter);
+        chooseBranch = (Spinner) dialogSettings.findViewById(R.id.chooseBranches);
+
+
+
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,8 +121,59 @@ public class  MainActivity extends AppCompatActivity {
             }
         });
 
+        btnEnter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogSettings.dismiss();
+                btnSettings.setVisibility(View.INVISIBLE);
+                btnGetStarted.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.downtoup));
+                btnGetStarted.setVisibility(View.VISIBLE);
+            }
+        });
+
         dialogSettings.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialogSettings.setCanceledOnTouchOutside(false);
         dialogSettings.show();
+    }
+
+
+    private void loadBranches(){
+        String testSample = "http://192.168.100.102:8000/api/branches";
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, testSample, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                try {
+                    JSONArray jsonArray = new JSONArray(s);
+                    for(int i = 0; i < jsonArray.length(); i++){
+                        JSONObject o = jsonArray.getJSONObject(i);
+                        String branches = o.getString("branch");
+                        String branchCode = o.getString("branch_code");
+
+                        Toast.makeText(MainActivity.this, branches + branchCode, Toast.LENGTH_LONG).show();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        try {
+                            Toast.makeText(MainActivity.this, "" + error, Toast.LENGTH_LONG).show();
+                        } catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(30000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
+        requestQueue.add(stringRequest);
+
     }
 }

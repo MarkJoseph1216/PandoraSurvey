@@ -92,6 +92,8 @@ public class FirstSurvey extends AppCompatActivity {
 
         btnSubmit.setVisibility(View.INVISIBLE);
 
+        checkNetworkStatus();
+
         imgName.startAnimation(AnimationUtils.loadAnimation(FirstSurvey.this, R.anim.lefttoright));
         inputFirst.startAnimation(AnimationUtils.loadAnimation(FirstSurvey.this, R.anim.fade_in));
         inputFirst.setVisibility(View.VISIBLE);
@@ -99,8 +101,6 @@ public class FirstSurvey extends AppCompatActivity {
         inputLast.setVisibility(View.VISIBLE);
         myCalendar = Calendar.getInstance();
         requestQueue = Volley.newRequestQueue(this);
-
-//        checkNetworkStatus();
 
         new CheckInternet().execute();
 
@@ -112,8 +112,6 @@ public class FirstSurvey extends AppCompatActivity {
 
              }
          });
-
-
 
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
             @Override
