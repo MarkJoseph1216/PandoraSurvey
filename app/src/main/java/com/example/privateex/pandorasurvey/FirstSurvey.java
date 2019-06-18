@@ -203,9 +203,7 @@ public class FirstSurvey extends AppCompatActivity {
     }
 
     private void getParseJSONRegister() {
-        String URL_DATA_REGISTER = "http://ad9b44d6.ngrok.io/register.php/";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, Survey.url_create_costumer, new Response.Listener<String>() {
-
             @Override
             public void onResponse(String response) {
                 try {
@@ -215,10 +213,7 @@ public class FirstSurvey extends AppCompatActivity {
                         String message = o.getString("message");
 
                         if(message.equals("success")){
-                            Toast.makeText(FirstSurvey.this, "Register Successful!" , Toast.LENGTH_SHORT).show();
-                        }
-                        else if(message.equals("Username Exists!")){
-                            Toast.makeText(FirstSurvey.this, "Username is Already Exists!" , Toast.LENGTH_SHORT).show();
+                            Toast.makeText(FirstSurvey.this, "Submit Successful!" , Toast.LENGTH_SHORT).show();
                         }
                         else {
                             Toast.makeText(FirstSurvey.this, "" + message, Toast.LENGTH_SHORT).show();
@@ -246,7 +241,6 @@ public class FirstSurvey extends AppCompatActivity {
                 return params;
             }
         };
-
         MySingleton.getInstance(FirstSurvey.this).addToRequestque(stringRequest);
         requestQueue.add(stringRequest);
     }

@@ -1,14 +1,22 @@
 package com.example.privateex.pandorasurvey;
 
+import android.Manifest;
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -16,6 +24,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -30,9 +39,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
-public class  MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
     ImageView imgLucerne;
     Button btnGetStarted, btnSettings;
@@ -41,7 +52,9 @@ public class  MainActivity extends AppCompatActivity {
     Dialog dialogSettings;
     Button btnCancel, btnEnter;
     Spinner chooseBranch;
-    String[] branches;
+    ArrayAdapter<String> adapterBranches;
+    String IMEI_Number_Holder;
+    TelephonyManager telephonyManager;
     private RequestQueue requestQueue;
 
     @Override
@@ -59,11 +72,28 @@ public class  MainActivity extends AppCompatActivity {
         dialogSettings = new Dialog(MainActivity.this);
         requestQueue = Volley.newRequestQueue(this);
 
+        // JSON Request
         loadBranches();
+        getParseJSONIMEI();
 
+        //Animations
         imgLucerne.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.zoomin));
-        //btnGetStarted.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.downtoup));
         btnSettings.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.downtoup));
+
+        //Getting IMEI Number
+        telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        IMEI_Number_Holder = telephonyManager.getDeviceId();
+        Log.d("IMEI", IMEI_Number_Holder);
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -105,14 +135,12 @@ public class  MainActivity extends AppCompatActivity {
         });
     }
 
+    //Show Settings
     public void showPopupMessageSettings() {
         dialogSettings.setContentView(R.layout.dialog_settings);
         btnCancel = (Button) dialogSettings.findViewById(R.id.btnCancel);
         btnEnter = (Button) dialogSettings.findViewById(R.id.btnEnter);
         chooseBranch = (Spinner) dialogSettings.findViewById(R.id.chooseBranches);
-
-
-
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,7 +164,7 @@ public class  MainActivity extends AppCompatActivity {
         dialogSettings.show();
     }
 
-
+    //loadingBranches
     private void loadBranches(){
         String testSample = "http://192.168.100.102:8000/api/branches";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, testSample, new Response.Listener<String>() {
@@ -149,10 +177,12 @@ public class  MainActivity extends AppCompatActivity {
                         String branches = o.getString("branch");
                         String branchCode = o.getString("branch_code");
 
-                        Toast.makeText(MainActivity.this, branches + branchCode, Toast.LENGTH_LONG).show();
+
+                        Toast.makeText(MainActivity.this, branches + branchCode, Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (JSONException e) {
+                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
             }
@@ -174,6 +204,43 @@ public class  MainActivity extends AppCompatActivity {
 
         RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
         requestQueue.add(stringRequest);
+    }
 
+    //Sending IMEI
+    private void getParseJSONIMEI() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, Survey.url_test_imei_registered, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONArray jsonArray = new JSONArray(response);
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject o = jsonArray.getJSONObject(i);
+                        String message = o.getString("message");
+
+                        if(message.equals("Request success")){
+                        }
+                        else {
+                            Toast.makeText(MainActivity.this, "" + message, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        }) {
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+
+                params.put("imei", IMEI_Number_Holder);
+                return params;
+            }
+        };
+        MySingleton.getInstance(MainActivity.this).addToRequestque(stringRequest);
+        requestQueue.add(stringRequest);
     }
 }
