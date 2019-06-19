@@ -3,20 +3,18 @@ package com.example.privateex.pandorasurvey.Survey;
 import android.app.Application;
 
 public class Survey extends Application{
-    public static String host = "192.168.100.102:8000";
-    public static String url_branches = host + "/api/survey/branches";
+    public static String host = "http://192.168.100.103:9090";
+    public static String hostDAN = "http://192.168.100.102/pandora";
 
-    public static String url_test_imei_registered = host + "/api/survey/imei/registered";
+    public static String url_branches = hostDAN + "/api/branches/branches.php";
+    public static String url_test_imei_registered = hostDAN + "/api/imei/survey/registered.php";
+    public static String imei_registered = hostDAN + "/api/imei/survey/imei_register.php";
 
-    public static String url_test_costumer_registered = host + "/api/survey/customer/registered";
-
-    public static String url_create_costumer = host + "/api/survey/customer/create";
-
+    public static String url_test_costumer_registered = host + "/api/surve//registered";
+    public static String url_create_costumer = hostDAN + "/api/survey/customer/create.php";
     public static String url_create_survey = host + "/api/survey/create";
 
+    public static String branchCode;
 
-//    public static String url_create_product = "http://192.168.100.100/arvs/create_newProd.php";
-
-   // public static int  TAG_SUCCESS = "success";
-
+//  public static String url_create_product = "http://192.168.100.100/arvs/create_newProd.php"
 }

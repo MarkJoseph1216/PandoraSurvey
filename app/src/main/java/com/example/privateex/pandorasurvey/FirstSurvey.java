@@ -3,15 +3,16 @@ package com.example.privateex.pandorasurvey;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Handler;
-import android.os.PowerManager;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -41,7 +42,6 @@ import java.util.Map;
 public class FirstSurvey extends AppCompatActivity {
 
     private ProgressDialog progressDL;
-    private PowerManager.WakeLock wlStayAwake;
     private RequestQueue requestQueue;
 
     TextInputLayout inputFirst, inputLast, inputEmail, inputMobile, inputDate;
@@ -49,17 +49,13 @@ public class FirstSurvey extends AppCompatActivity {
     ImageView imgName, imgEmail, imgMobile, imgDate;
     Calendar myCalendar;
     Button btnSubmit;
-    Button btnCancel, btnEnter;
+
+    String fName = "", lName = "", mobNo, bday = "", email="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first_survey);
-
-        PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
-        wlStayAwake = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "wakelocktag");
-        wlStayAwake.acquire();
-
         btnSubmit = (Button) findViewById(R.id.btnSubmit);
 
         inputFirst = (TextInputLayout) findViewById(R.id.inputFirst);
@@ -92,7 +88,8 @@ public class FirstSurvey extends AppCompatActivity {
 
         btnSubmit.setVisibility(View.INVISIBLE);
 
-        checkNetworkStatus();
+
+        //checkNetworkStatus();
 
         imgName.startAnimation(AnimationUtils.loadAnimation(FirstSurvey.this, R.anim.lefttoright));
         inputFirst.startAnimation(AnimationUtils.loadAnimation(FirstSurvey.this, R.anim.fade_in));
@@ -108,15 +105,31 @@ public class FirstSurvey extends AppCompatActivity {
              @Override
              public void onClick(View v) {
 
-                 getParseJSONRegister();
+                 fName = edtFirstName.getText().toString();
+                 lName = edtLastName.getText().toString();
+                 email = edtEmail.getText().toString();
+                 mobNo = edtMobile.getText().toString();
 
+                 if(fName.equals("")) {
+                     edtFirstName.setError("Required");
+                 }
+                 if(lName.equals("")) {
+                     edtLastName.setError("Required");
+                 }
+                 if(email.equals("")) {
+                     edtEmail.setError("Required");
+                 }
+                 else if(fName.equals("") && lName.equals("") && email.equals("")){
+                     Toast.makeText(FirstSurvey.this, "Field's Empty", Toast.LENGTH_SHORT).show();
+
+                 } else {
+                     getParseJSONRegister();
+                 }
              }
          });
-
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear,
-                                  int dayOfMonth) {
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -176,42 +189,44 @@ public class FirstSurvey extends AppCompatActivity {
         }, 1800);
 
         Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat mdformat = new SimpleDateFormat("MM / dd / yyyy ");
+        SimpleDateFormat mdformat = new SimpleDateFormat("yyyy-MM-dd");
         String currentDate = mdformat.format(calendar.getTime());
-
-        edtBirthDate.setText(currentDate);
     }
 
+    //Updating Birthday Every Click in EditText
     private void updateEdtBirth() {
-        String myFormat = "MM/ dd/ yyyy";
+        String myFormat = "yyyy-MM-dd";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
         edtBirthDate.setText(sdf.format(myCalendar.getTime()));
+
+        bday = edtBirthDate.getText().toString();
     }
 
     private void checkNetworkStatus()
     {
-        if (AppStatus.getInstance(this).isOnline()) {
-
+        if (AppStatus.getInstance(this).isOnline())
+        {
             Toast.makeText(this,"You are online!!!!",Toast.LENGTH_SHORT).show();
-
         } else {
-
             Toast.makeText(this,"You are not online!!!!",Toast.LENGTH_SHORT).show();
-
         }
     }
 
+    //Register Customer
     private void getParseJSONRegister() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, Survey.url_create_costumer, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(
+                Request.Method.POST,
+                Survey.url_create_costumer,
+                new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
                     JSONArray jsonArray = new JSONArray(response);
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject o = jsonArray.getJSONObject(i);
-                        String message = o.getString("message");
 
+                        String message = o.getString("message");
                         if(message.equals("success")){
                             Toast.makeText(FirstSurvey.this, "Submit Successful!" , Toast.LENGTH_SHORT).show();
                         }
@@ -232,11 +247,12 @@ public class FirstSurvey extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
 
-                params.put("firstname", edtFirstName.getText().toString());
-                params.put("lastname", edtLastName.getText().toString());
-                params.put("email", edtEmail.getText().toString());
-                params.put("mobile", edtMobile.getText().toString());
-                params.put("date_of_birth",edtBirthDate.getText().toString());
+                params.put("code", "default");
+                params.put("firstname", fName);
+                params.put("lastname", lName);
+                params.put("email", email);
+                params.put("mobile", mobNo);
+                params.put("birthday",bday);
 
                 return params;
             }
@@ -251,7 +267,6 @@ public class FirstSurvey extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             progressDL = ProgressDialog.show(FirstSurvey.this, "", "Checking internet connection.");
-            wlStayAwake.acquire();
         }
 
         @Override
@@ -268,23 +283,14 @@ public class FirstSurvey extends AppCompatActivity {
             else {
                 errmsg = "No internet connection.";
             }
-
             return result;
         }
-
         @Override
         protected void onPostExecute(Boolean bResult) {
             progressDL.dismiss();
             if(!bResult) {
                 Toast.makeText( FirstSurvey.this, errmsg, Toast.LENGTH_SHORT).show();
             }
-
         }
-
-
     }
-
-
-
-
 }
