@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
@@ -15,7 +16,9 @@ import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -29,6 +32,7 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -42,7 +46,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class MainActivity extends AppCompatActivity {
 
     ImageView imgLucerne;
@@ -52,10 +55,14 @@ public class MainActivity extends AppCompatActivity {
     Dialog dialogSettings;
     Button btnCancel, btnEnter;
     Spinner chooseBranch;
-    ArrayAdapter<String> adapterBranches;
     String IMEI_Number_Holder;
     TelephonyManager telephonyManager;
     private RequestQueue requestQueue;
+    ArrayList<String> arrayBranches;
+    ArrayList<String> arrayBranchCode;
+    HashMap<Integer,String> branchCodeArrayList = new HashMap<Integer, String>();
+    String[] branchArray;
+    String branch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,14 +78,15 @@ public class MainActivity extends AppCompatActivity {
 
         dialogSettings = new Dialog(MainActivity.this);
         requestQueue = Volley.newRequestQueue(this);
+        arrayBranches = new ArrayList<>();
+        arrayBranchCode = new ArrayList<>();
 
         // JSON Request
-        loadBranches();
         getParseJSONIMEI();
 
         //Animations
         imgLucerne.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.zoomin));
-        btnSettings.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.downtoup));
+        //btnSettings.setVisibility(View.INVISIBLE);
 
         //Getting IMEI Number
         telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
@@ -135,78 +143,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    //Show Settings
-    public void showPopupMessageSettings() {
-        dialogSettings.setContentView(R.layout.dialog_settings);
-        btnCancel = (Button) dialogSettings.findViewById(R.id.btnCancel);
-        btnEnter = (Button) dialogSettings.findViewById(R.id.btnEnter);
-        chooseBranch = (Spinner) dialogSettings.findViewById(R.id.chooseBranches);
-
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialogSettings.dismiss();
-            }
-        });
-
-        btnEnter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialogSettings.dismiss();
-                btnSettings.setVisibility(View.INVISIBLE);
-                btnGetStarted.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.downtoup));
-                btnGetStarted.setVisibility(View.VISIBLE);
-            }
-        });
-
-        dialogSettings.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialogSettings.setCanceledOnTouchOutside(false);
-        dialogSettings.show();
-    }
-
-    //loadingBranches
-    private void loadBranches(){
-        String testSample = "http://192.168.100.102:8000/api/branches";
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, testSample, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String s) {
-                try {
-                    JSONArray jsonArray = new JSONArray(s);
-                    for(int i = 0; i < jsonArray.length(); i++){
-                        JSONObject o = jsonArray.getJSONObject(i);
-                        String branches = o.getString("branch");
-                        String branchCode = o.getString("branch_code");
-
-
-                        Toast.makeText(MainActivity.this, branches + branchCode, Toast.LENGTH_SHORT).show();
-                    }
-
-                } catch (JSONException e) {
-                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                    e.printStackTrace();
-                }
-            }
-        },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        try {
-                            Toast.makeText(MainActivity.this, "" + error, Toast.LENGTH_LONG).show();
-                        } catch (Exception e){
-                            e.printStackTrace();
-                        }
-                    }
-                });
-
-        stringRequest.setRetryPolicy(new DefaultRetryPolicy(30000,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-        RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
-        requestQueue.add(stringRequest);
-    }
-
-    //Sending IMEI
+    //Sending IMEI and Getting Branches
     private void getParseJSONIMEI() {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, Survey.url_test_imei_registered, new Response.Listener<String>() {
             @Override
@@ -215,12 +152,24 @@ public class MainActivity extends AppCompatActivity {
                     JSONArray jsonArray = new JSONArray(response);
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject o = jsonArray.getJSONObject(i);
+
                         String message = o.getString("message");
 
-                        if(message.equals("Request success")){
+                        Log.d("Message", message);
+
+                        if(message.equals("success")){
+                            String branchcode = o.getString("branch_code");
+                            Survey.branchCode = branchcode;
+                            Toast.makeText(MainActivity.this, Survey.branchCode, Toast.LENGTH_SHORT).show();
+                          //  dialogCheckingIMEI.dismiss();
+                            btnGetStarted.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.downtoup));
+                            btnGetStarted.setVisibility(View.VISIBLE);
+                            btnSettings.setVisibility(View.INVISIBLE);
                         }
-                        else {
-                            Toast.makeText(MainActivity.this, "" + message, Toast.LENGTH_SHORT).show();
+                        else if(message.equals("not found")){
+                            btnSettings.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.downtoup));
+                            btnSettings.setVisibility(View.VISIBLE);
+                            getJSONBranches();
                         }
                     }
                 } catch (JSONException e) {
@@ -235,12 +184,134 @@ public class MainActivity extends AppCompatActivity {
         }) {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-
                 params.put("imei", IMEI_Number_Holder);
+
                 return params;
             }
         };
         MySingleton.getInstance(MainActivity.this).addToRequestque(stringRequest);
         requestQueue.add(stringRequest);
+    }
+
+    //GettingAllBranches
+    public void getJSONBranches(){
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, Survey.url_branches, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONArray jsonArrayResponse = new JSONArray(response);
+                    branchArray = new String[jsonArrayResponse.length()];
+                    for (int index = 0; index < jsonArrayResponse.length(); index++) {
+                        JSONObject parentObject = jsonArrayResponse.getJSONObject(index);
+                        String branch = parentObject.getString("branch");
+                        JSONObject details = parentObject.getJSONObject("details");
+                        String branch_code = details.getString("branch_code");
+
+                        branchCodeArrayList.put(index, branch_code);
+
+                        branchArray[index] = branch;
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+        MySingleton.getInstance(MainActivity.this).addToRequestque(stringRequest);
+        requestQueue.add(stringRequest);
+    }
+
+    //SendingIMEIandBranch
+    public void JSONSendingIMEIandBranch(final String IMEI, final String branches){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, Survey.imei_registered, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONArray jsonArray = new JSONArray(response);
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject o = jsonArray.getJSONObject(i);
+
+                        String message = o.getString("message");
+                        if(message.equals("success")){
+                            Toast.makeText(MainActivity.this, "Registered Successful!", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        }) {
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("imei", IMEI);
+                params.put("branch_code", Survey.branchCode);
+
+                return params;
+            }
+        };
+        MySingleton.getInstance(MainActivity.this).addToRequestque(stringRequest);
+        requestQueue.add(stringRequest);
+    }
+
+    //Show Settings
+    public void showPopupMessageSettings() {
+        dialogSettings.setContentView(R.layout.dialog_settings);
+        btnCancel = (Button) dialogSettings.findViewById(R.id.btnCancel);
+        btnEnter = (Button) dialogSettings.findViewById(R.id.btnEnter);
+        chooseBranch = (Spinner) dialogSettings.findViewById(R.id.chooseBranches);
+
+        //Adapter Spinner
+        ArrayAdapter<String> adapterBranches = new ArrayAdapter<String>(dialogSettings.getContext(),
+                R.layout.spinner_layout, branchArray);
+        adapterBranches.setDropDownViewResource(R.layout.spinner_layout);
+        chooseBranch.setAdapter(adapterBranches);
+
+        chooseBranch.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                branch = chooseBranch.getSelectedItem().toString();
+                Survey.branchCode = branchCodeArrayList.get(chooseBranch.getSelectedItemPosition());
+
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogSettings.dismiss();
+            }
+        });
+        btnEnter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                JSONSendingIMEIandBranch(IMEI_Number_Holder, Survey.branchCode);
+
+                dialogSettings.dismiss();
+                btnSettings.setVisibility(View.INVISIBLE);
+                btnGetStarted.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.downtoup));
+                btnGetStarted.setVisibility(View.VISIBLE);
+            }
+        });
+        dialogSettings.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialogSettings.setCanceledOnTouchOutside(false);
+        dialogSettings.show();
     }
 }
