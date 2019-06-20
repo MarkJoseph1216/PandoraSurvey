@@ -246,6 +246,8 @@ public class FirstSurvey extends AppCompatActivity {
                             Toast.makeText(FirstSurvey.this, "User not exist!!!" , Toast.LENGTH_SHORT).show();
                             getParseJSONRegisterCustomer(fName,lName,email,mobNo,bday);
 
+                            Intent intent = new Intent(FirstSurvey.this, SecondSurvey.class);
+                            startActivity(intent);
                         }
                         else {
                             Toast.makeText(FirstSurvey.this, "" + message, Toast.LENGTH_SHORT).show();
