@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Animations
         imgLucerne.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.zoomin));
-        //btnSettings.setVisibility(View.INVISIBLE);
+        btnSettings.setVisibility(View.INVISIBLE);
 
         //Getting IMEI Number
         telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
@@ -160,8 +160,8 @@ public class MainActivity extends AppCompatActivity {
                         if(message.equals("success")){
                             String branchcode = o.getString("branch_code");
                             Survey.branchCode = branchcode;
-                            Toast.makeText(MainActivity.this, Survey.branchCode, Toast.LENGTH_SHORT).show();
-                          //  dialogCheckingIMEI.dismiss();
+                            //Toast.makeText(MainActivity.this, Survey.branchCode, Toast.LENGTH_SHORT).show();
+
                             btnGetStarted.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.downtoup));
                             btnGetStarted.setVisibility(View.VISIBLE);
                             btnSettings.setVisibility(View.INVISIBLE);
