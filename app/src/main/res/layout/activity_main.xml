@@ -78,6 +78,7 @@
         android:layout_centerInParent="true"
         android:textStyle="bold"
         android:typeface="serif"
+        android:visibility="invisible"
         style="@style/ButtonBorder.Accent"
         android:text="SETTINGS"
         android:layout_height="60dp" />
