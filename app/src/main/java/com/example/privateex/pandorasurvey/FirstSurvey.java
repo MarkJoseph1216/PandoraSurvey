@@ -13,6 +13,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -109,26 +110,32 @@ public class FirstSurvey extends AppCompatActivity {
          btnSubmit.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View v) {
+                 if (AppStatus.getInstance(FirstSurvey.this).isOnline())
+                 {
+                     fName = edtFirstName.getText().toString();
+                     lName = edtLastName.getText().toString();
+                     email = edtEmail.getText().toString();
+                     mobNo = edtMobile.getText().toString();
 
-                 fName = edtFirstName.getText().toString();
-                 lName = edtLastName.getText().toString();
-                 email = edtEmail.getText().toString();
-                 mobNo = edtMobile.getText().toString();
-
-                 if(fName.equals("")) {
-                     edtFirstName.setError("Required");
-                 }
-                 if(lName.equals("")) {
-                     edtLastName.setError("Required");
-                 }
-                 if(email.equals("")) {
-                     edtEmail.setError("Required");
-                 }
-                 else if(fName.equals("") && lName.equals("") && email.equals("")){
-                     Toast.makeText(FirstSurvey.this, "Field's Empty", Toast.LENGTH_SHORT).show();
-
+                     if(fName.equals("")) {
+                         edtFirstName.setError("Required");
+                     }
+                     if(lName.equals("")) {
+                         edtLastName.setError("Required");
+                     }
+                     if(email.equals("")) {
+                         edtEmail.setError("Required");
+                     }
+                     if(mobNo.length() < 11 && !mobNo.isEmpty()){
+                         edtMobile.setError("Invalid Mobile Number");
+                     }
+                     else if(fName.equals("") && lName.equals("") && email.equals("")){
+                         Toast.makeText(FirstSurvey.this, "Field's are Empty!", Toast.LENGTH_SHORT).show();
+                     } else {
+                         getParseJSONCheckCustomer();
+                     }
                  } else {
-                     getParseJSONCheckCustomer();
+                     Toast.makeText(FirstSurvey.this,"You are not online, Please Activate your wifi/data first.",Toast.LENGTH_SHORT).show();
                  }
              }
          });
@@ -372,5 +379,14 @@ public class FirstSurvey extends AppCompatActivity {
         edtMobile.setText("");
         edtEmail.setText("");
         edtBirthDate.setText("");
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            Toast.makeText(this, "Please Complete your process....", Toast.LENGTH_SHORT).show();
+        }
+        return true;
     }
 }
