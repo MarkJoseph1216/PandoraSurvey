@@ -36,7 +36,11 @@
         <activity
             android:name=".SecondSurvey"
             android:screenOrientation="landscape" />
-        <activity android:name=".EndScreen"></activity>
+        <activity android:name=".EndScreen"
+            android:screenOrientation="landscape"></activity>
+
+        <activity android:name=".FirstQ"
+            android:screenOrientation="landscape"></activity>
     </application>
 
 </manifest>

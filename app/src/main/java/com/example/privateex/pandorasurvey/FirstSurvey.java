@@ -27,6 +27,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.privateex.pandorasurvey.Fragments.FirstQuestions;
 import com.example.privateex.pandorasurvey.Survey.*;
 
 import org.json.JSONArray;
@@ -50,7 +51,11 @@ public class FirstSurvey extends AppCompatActivity {
     Calendar myCalendar;
     Button btnSubmit;
 
-    String fName = "", lName = "", mobNo, bday = "", email="";
+    String fName = "";
+    String lName = "";
+    String mobNo = "";
+    String bday = "";
+    String email="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,7 +128,7 @@ public class FirstSurvey extends AppCompatActivity {
                      Toast.makeText(FirstSurvey.this, "Field's Empty", Toast.LENGTH_SHORT).show();
 
                  } else {
-                     getParseJSONRegister();
+                     getParseJSONCheckCustomer();
                  }
              }
          });
@@ -213,11 +218,11 @@ public class FirstSurvey extends AppCompatActivity {
         }
     }
 
-    //Register Customer
-    private void getParseJSONRegister() {
+    //Check Customer if exist or not
+    private void getParseJSONCheckCustomer() {
         StringRequest stringRequest = new StringRequest(
                 Request.Method.POST,
-                Survey.url_create_costumer,
+                Survey.url_check_costumer,
                 new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -226,12 +231,22 @@ public class FirstSurvey extends AppCompatActivity {
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject o = jsonArray.getJSONObject(i);
 
+                //        Toast.makeText(FirstSurvey.this, ""+response, Toast.LENGTH_SHORT).show();
+
                         String message = o.getString("message");
+
                         if(message.equals("success")){
-                            Toast.makeText(FirstSurvey.this, "Submit Successful!" , Toast.LENGTH_SHORT).show();
+                            Toast.makeText(FirstSurvey.this, "User not exist!!!" , Toast.LENGTH_SHORT).show();
+                            getParseJSONRegisterCustomer(fName,lName,email,mobNo,bday);
+
                         }
                         else {
                             Toast.makeText(FirstSurvey.this, "" + message, Toast.LENGTH_SHORT).show();
+                            final Intent intent = new Intent(FirstSurvey.this, EndScreen.class);
+                            startActivity(intent);
+
+
+
                         }
                     }
                 } catch (JSONException e) {
@@ -253,6 +268,63 @@ public class FirstSurvey extends AppCompatActivity {
                 params.put("email", email);
                 params.put("mobile", mobNo);
                 params.put("birthday",bday);
+
+                return params;
+            }
+        };
+        MySingleton.getInstance(FirstSurvey.this).addToRequestque(stringRequest);
+        requestQueue.add(stringRequest);
+    }
+
+    //Register new customer
+    private void getParseJSONRegisterCustomer(final String name, final String lastname,final String emailuser , final String no, final String date) {
+        StringRequest stringRequest = new StringRequest(
+                Request.Method.POST,
+                Survey.url_creater_new_costumer,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONArray jsonArray = new JSONArray(response);
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject o = jsonArray.getJSONObject(i);
+
+                                //        Toast.makeText(FirstSurvey.this, ""+response, Toast.LENGTH_SHORT).show();
+
+                                String message = o.getString("message");
+
+                                if(message.equals("success")){
+                                    Toast.makeText(FirstSurvey.this, "Succesfully Saved!!" , Toast.LENGTH_SHORT).show();
+                                    final Intent intent = new Intent(FirstSurvey.this, SecondSurvey.class);
+                                    startActivity(intent);
+                                    ClearEditText();
+                                }
+                                else {
+                                    Toast.makeText(FirstSurvey.this, "" + message, Toast.LENGTH_SHORT).show();
+
+
+
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        }) {
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+
+                params.put("code", "default");
+                params.put("firstname", name);
+                params.put("lastname", lastname);
+                params.put("email", emailuser);
+                params.put("mobile", no);
+                params.put("birthday",date);
 
                 return params;
             }
@@ -292,5 +364,13 @@ public class FirstSurvey extends AppCompatActivity {
                 Toast.makeText( FirstSurvey.this, errmsg, Toast.LENGTH_SHORT).show();
             }
         }
+    }
+    private void ClearEditText()
+    {
+        edtFirstName.setText("");
+        edtLastName.setText("");
+        edtMobile.setText("");
+        edtEmail.setText("");
+        edtBirthDate.setText("");
     }
 }

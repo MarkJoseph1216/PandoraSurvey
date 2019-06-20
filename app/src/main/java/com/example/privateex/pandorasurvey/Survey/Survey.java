@@ -12,6 +12,11 @@ public class Survey extends Application{
 
     public static String url_test_costumer_registered = host + "/api/surve//registered";
     public static String url_create_costumer = hostDAN + "/api/survey/customer/create.php";
+
+    public static String url_check_costumer = hostDAN + "/api/survey/customer/check_customer.php";
+
+    public static String url_creater_new_costumer = hostDAN + "/api/survey/customer/create_customer.php";
+
     public static String url_create_survey = host + "/api/survey/create";
 
     public static String branchCode;
