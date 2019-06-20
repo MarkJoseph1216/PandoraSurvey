@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white"
     android:layout_width="match_parent"
@@ -41,22 +40,21 @@
         android:layout_height="80dp" />
 
     <LinearLayout
-        android:layout_marginLeft="35dp"
         android:layout_marginRight="35dp"
         android:id="@+id/layout"
         android:orientation="horizontal"
-        android:layout_marginTop="50dp"
         android:layout_below="@+id/imgLucerne"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="50dp">
 
         <ImageView
             android:layout_marginTop="5dp"
             android:visibility="visible"
             android:id="@+id/imgName"
+            android:layout_marginLeft="35dp"
             android:background="@drawable/ic_person_black_24dp"
-            android:layout_width="60dp"
-            android:layout_height="65dp" />
+            android:layout_width="50dp"
+            android:layout_height="45dp" />
 
     <android.support.design.widget.TextInputLayout
         android:theme="@style/TextInputLayoutAppearance"
@@ -75,7 +73,7 @@
             android:backgroundTint="@color/black"
             android:textColorHint="@color/whiteGray"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="40dp" />
     </android.support.design.widget.TextInputLayout>
 
         <TextView
@@ -86,7 +84,7 @@
             android:theme="@style/TextInputLayoutAppearance"
             android:visibility="visible"
             android:id="@+id/inputLast"
-            android:layout_width="match_parent"
+            android:layout_width="410dp"
             android:layout_height="wrap_content">
 
             <android.support.design.widget.TextInputEditText
@@ -108,8 +106,8 @@
         android:layout_marginTop="20dp"
         android:background="@drawable/emailicon"
         android:layout_below="@+id/layout"
-        android:layout_width="60dp"
-        android:layout_height="55dp" />
+        android:layout_width="50dp"
+        android:layout_height="45dp" />
 
     <android.support.design.widget.TextInputLayout
         android:theme="@style/TextInputLayoutAppearance"
@@ -131,7 +129,7 @@
             android:backgroundTint="@color/black"
             android:hint="Email"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="40dp" />
     </android.support.design.widget.TextInputLayout>
     
     <ImageView
@@ -141,8 +139,8 @@
         android:layout_marginLeft="35dp"
         android:layout_marginTop="28sp"
         android:layout_below="@+id/imgEmail"
-        android:layout_width="60dp"
-        android:layout_height="55dp"/>
+        android:layout_width="50dp"
+        android:layout_height="45dp"/>
 
     <android.support.design.widget.TextInputLayout
         android:theme="@style/TextInputLayoutAppearance"
@@ -164,9 +162,7 @@
             android:backgroundTint="@color/black"
             android:hint="Mobile Number"
             android:layout_width="match_parent"
-            android:inputType="number"
-            android:maxLength="11"
-            android:layout_height="match_parent" />
+            android:layout_height="40dp" />
     </android.support.design.widget.TextInputLayout>
 
     <ImageView
@@ -235,6 +231,6 @@
         android:layout_alignParentTop="true"
         android:background="@drawable/lucernelogo2"
         android:layout_width="wrap_content"
-        android:layout_height="80dp" />
+        android:layout_height="60dp" />
 
 </RelativeLayout>
