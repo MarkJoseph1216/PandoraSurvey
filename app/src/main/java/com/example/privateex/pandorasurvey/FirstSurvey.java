@@ -1,9 +1,12 @@
 package com.example.privateex.pandorasurvey;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -17,6 +20,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -51,6 +56,8 @@ public class FirstSurvey extends AppCompatActivity {
     ImageView imgName, imgEmail, imgMobile, imgDate;
     Calendar myCalendar;
     Button btnSubmit;
+    CheckBox chckMs, chckMrs, chckMr;
+    Dialog dialogMessage;
 
     String fName = "";
     String lName = "";
@@ -81,11 +88,19 @@ public class FirstSurvey extends AppCompatActivity {
         imgMobile = (ImageView) findViewById(R.id.imgPhone);
         imgDate = (ImageView) findViewById(R.id.imgBirth);
 
+        chckMs = (CheckBox) findViewById(R.id.chckMs);
+        chckMrs = (CheckBox) findViewById(R.id.chckMrs);
+        chckMr = (CheckBox) findViewById(R.id.chckMr);
+
         inputFirst.setVisibility(View.INVISIBLE);
         inputLast.setVisibility(View.INVISIBLE);
         inputEmail.setVisibility(View.INVISIBLE);
         inputMobile.setVisibility(View.INVISIBLE);
         inputDate.setVisibility(View.INVISIBLE);
+
+        chckMs.setVisibility(View.INVISIBLE);
+        chckMrs.setVisibility(View.INVISIBLE);
+        chckMr.setVisibility(View.INVISIBLE);
 
         imgName.setVisibility(View.INVISIBLE);
         imgEmail.setVisibility(View.INVISIBLE);
@@ -94,16 +109,21 @@ public class FirstSurvey extends AppCompatActivity {
 
         btnSubmit.setVisibility(View.INVISIBLE);
 
-
-        //checkNetworkStatus();
-
         imgName.startAnimation(AnimationUtils.loadAnimation(FirstSurvey.this, R.anim.lefttoright));
         inputFirst.startAnimation(AnimationUtils.loadAnimation(FirstSurvey.this, R.anim.fade_in));
         inputFirst.setVisibility(View.VISIBLE);
         inputLast.startAnimation(AnimationUtils.loadAnimation(FirstSurvey.this, R.anim.fade_in));
         inputLast.setVisibility(View.VISIBLE);
+        chckMs.startAnimation(AnimationUtils.loadAnimation(FirstSurvey.this, R.anim.fade_in));
+        chckMs.setVisibility(View.VISIBLE);
+        chckMrs.startAnimation(AnimationUtils.loadAnimation(FirstSurvey.this, R.anim.fade_in));
+        chckMrs.setVisibility(View.VISIBLE);
+        chckMr.startAnimation(AnimationUtils.loadAnimation(FirstSurvey.this, R.anim.fade_in));
+        chckMr.setVisibility(View.VISIBLE);
+
         myCalendar = Calendar.getInstance();
         requestQueue = Volley.newRequestQueue(this);
+        dialogMessage = new Dialog(FirstSurvey.this);
 
         new CheckInternet().execute();
 
@@ -132,13 +152,41 @@ public class FirstSurvey extends AppCompatActivity {
                      else if(fName.equals("") && lName.equals("") && email.equals("")){
                          Toast.makeText(FirstSurvey.this, "Field's are Empty!", Toast.LENGTH_SHORT).show();
                      } else {
-                         getParseJSONCheckCustomer();
+                         showPopupMessage();
                      }
                  } else {
                      Toast.makeText(FirstSurvey.this,"You are not online, Please Activate your wifi/data first.",Toast.LENGTH_SHORT).show();
                  }
              }
          });
+
+         chckMs.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+             @Override
+             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                 if(isChecked){
+                     chckMrs.setChecked(false);
+                     chckMr.setChecked(false);
+                 }
+             }
+         });
+        chckMrs.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    chckMs.setChecked(false);
+                    chckMr.setChecked(false);
+                }
+            }
+        });
+        chckMr.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    chckMrs.setChecked(false);
+                    chckMs.setChecked(false);
+                }
+            }
+        });
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -215,16 +263,6 @@ public class FirstSurvey extends AppCompatActivity {
         bday = edtBirthDate.getText().toString();
     }
 
-    private void checkNetworkStatus()
-    {
-        if (AppStatus.getInstance(this).isOnline())
-        {
-            Toast.makeText(this,"You are online!!!!",Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this,"You are not online!!!!",Toast.LENGTH_SHORT).show();
-        }
-    }
-
     //Check Customer if exist or not
     private void getParseJSONCheckCustomer() {
         StringRequest stringRequest = new StringRequest(
@@ -237,8 +275,6 @@ public class FirstSurvey extends AppCompatActivity {
                     JSONArray jsonArray = new JSONArray(response);
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject o = jsonArray.getJSONObject(i);
-
-                //        Toast.makeText(FirstSurvey.this, ""+response, Toast.LENGTH_SHORT).show();
 
                         String message = o.getString("message");
 
@@ -297,9 +333,6 @@ public class FirstSurvey extends AppCompatActivity {
                             JSONArray jsonArray = new JSONArray(response);
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject o = jsonArray.getJSONObject(i);
-
-                                //        Toast.makeText(FirstSurvey.this, ""+response, Toast.LENGTH_SHORT).show();
-
                                 String message = o.getString("message");
 
                                 if(message.equals("success")){
@@ -310,9 +343,6 @@ public class FirstSurvey extends AppCompatActivity {
                                 }
                                 else {
                                     Toast.makeText(FirstSurvey.this, "" + message, Toast.LENGTH_SHORT).show();
-
-
-
                                 }
                             }
                         } catch (JSONException e) {
@@ -342,6 +372,7 @@ public class FirstSurvey extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
+    //Checking Internet Connection
     private class CheckInternet extends AsyncTask<Void, Void, Boolean> {
         String errmsg = "";
 
@@ -349,11 +380,9 @@ public class FirstSurvey extends AppCompatActivity {
         protected void onPreExecute() {
             progressDL = ProgressDialog.show(FirstSurvey.this, "", "Checking internet connection.");
         }
-
         @Override
         protected Boolean doInBackground(Void... params) {
             boolean result = false;
-
             ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
             NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
@@ -383,12 +412,32 @@ public class FirstSurvey extends AppCompatActivity {
         edtBirthDate.setText("");
     }
 
+    //BackPressed Disabled
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-
         if(keyCode == KeyEvent.KEYCODE_BACK){
             Toast.makeText(this, "Please Complete your process....", Toast.LENGTH_SHORT).show();
         }
         return true;
+    }
+
+    //Show popupMessage when Submit
+    private void showPopupMessage(){
+        dialogMessage.setContentView(R.layout.message_layout);
+        Thread timer = new Thread(){
+            public void run(){
+                try {
+                    sleep(800);
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+                finally {
+                    getParseJSONCheckCustomer();
+                }
+            }
+        }; timer.start();
+        dialogMessage.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialogMessage.setCanceledOnTouchOutside(false);
+        dialogMessage.show();
     }
 }

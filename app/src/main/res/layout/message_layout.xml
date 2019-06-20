@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.v7.widget.CardView
+        app:cardCornerRadius="10dp"
+        android:layout_centerInParent="true"
+        android:layout_margin="70dp"
+        android:layout_width="350dp"
+        android:elevation="8dp"
+        android:layout_height="110dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/layout"
+            android:background="@color/green"
+            android:layout_width="match_parent"
+            android:layout_height="30dp">
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_below="@+id/layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginRight="20dp"
+                android:layout_centerInParent="true"
+                android:layout_toLeftOf="@+id/imgChecked"
+                android:typeface="serif"
+                android:text="Submit Successful!"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:layout_marginRight="40dp"
+                android:layout_centerInParent="true"
+                android:layout_alignParentEnd="true"
+                android:id="@+id/imgChecked"
+                android:background="@drawable/checkicon"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+
+        </RelativeLayout>
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</RelativeLayout>

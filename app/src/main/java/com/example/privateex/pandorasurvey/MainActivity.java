@@ -1,7 +1,6 @@
 package com.example.privateex.pandorasurvey;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -14,6 +13,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
@@ -67,12 +67,6 @@ public class MainActivity extends AppCompatActivity {
     String[] branchArray;
     String branch;
 
-    private int STORAGE_PERMISSION_CODE = 1;
-    String[] PERMISSIONS = {
-            Manifest.permission.READ_PHONE_STATE,
-            Manifest.permission.READ_EXTERNAL_STORAGE
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,8 +84,8 @@ public class MainActivity extends AppCompatActivity {
         arrayBranches = new ArrayList<>();
         arrayBranchCode = new ArrayList<>();
 
-        //Permissions
-        requestPhonePermission();
+        //Checking Internet Connection
+        checkNetworkStatus();
 
         // JSON Request
         getParseJSONIMEI();
@@ -326,35 +320,26 @@ public class MainActivity extends AppCompatActivity {
         dialogSettings.show();
     }
 
-    private void requestPhonePermission(){
-        if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_PHONE_STATE)){
+    private void checkNetworkStatus(){
+        if (AppStatus.getInstance(this).isOnline()) {
+            getParseJSONIMEI();
+        } else {
             new AlertDialog.Builder(this)
-                    .setTitle("Permission Needed")
-                    .setMessage("This permission is needed to Access System Settings")
+                    .setCancelable(false)
+                    .setTitle("Network Error!")
+                    .setMessage("Please Enable your Internet Connection First!")
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions(MainActivity.this, PERMISSIONS, STORAGE_PERMISSION_CODE);
+                            checkNetworkStatus();
                         }
                     }). setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
+                    Toast.makeText(MainActivity.this, "Please restart the app and activate your Internet Connection", Toast.LENGTH_SHORT).show();
                 }
             }).create().show();
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, STORAGE_PERMISSION_CODE);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if(requestCode == STORAGE_PERMISSION_CODE){
-            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                Toast.makeText(this, "PERMISSION GRANTED", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "PERMISSION DENIED", Toast.LENGTH_SHORT).show();
-            }
         }
     }
 }
