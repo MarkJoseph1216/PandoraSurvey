@@ -215,7 +215,7 @@
                 android:text="SUBMIT INFORMATION"
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="40dp"
-                android:layout_marginRight="30dp"
+                android:layout_marginRight="35dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
                 android:layout_width="250dp"

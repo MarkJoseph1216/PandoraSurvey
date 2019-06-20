@@ -1,15 +1,18 @@
 package com.example.privateex.pandorasurvey;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -64,6 +67,12 @@ public class MainActivity extends AppCompatActivity {
     String[] branchArray;
     String branch;
 
+    private int STORAGE_PERMISSION_CODE = 1;
+    String[] PERMISSIONS = {
+            Manifest.permission.READ_PHONE_STATE,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,12 +90,15 @@ public class MainActivity extends AppCompatActivity {
         arrayBranches = new ArrayList<>();
         arrayBranchCode = new ArrayList<>();
 
+        //Permissions
+        requestPhonePermission();
+
         // JSON Request
         getParseJSONIMEI();
 
         //Animations
         imgLucerne.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.zoomin));
-        //btnSettings.setVisibility(View.INVISIBLE);
+        btnSettings.setVisibility(View.INVISIBLE);
 
         //Getting IMEI Number
         telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
@@ -154,14 +166,13 @@ public class MainActivity extends AppCompatActivity {
                         JSONObject o = jsonArray.getJSONObject(i);
 
                         String message = o.getString("message");
-
                         Log.d("Message", message);
 
                         if(message.equals("success")){
                             String branchcode = o.getString("branch_code");
                             Survey.branchCode = branchcode;
-                            Toast.makeText(MainActivity.this, Survey.branchCode, Toast.LENGTH_SHORT).show();
-                          //  dialogCheckingIMEI.dismiss();
+                            //Toast.makeText(MainActivity.this, Survey.branchCode, Toast.LENGTH_SHORT).show();
+
                             btnGetStarted.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.downtoup));
                             btnGetStarted.setVisibility(View.VISIBLE);
                             btnSettings.setVisibility(View.INVISIBLE);
@@ -284,7 +295,6 @@ public class MainActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 branch = chooseBranch.getSelectedItem().toString();
                 Survey.branchCode = branchCodeArrayList.get(chooseBranch.getSelectedItemPosition());
-
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -298,6 +308,7 @@ public class MainActivity extends AppCompatActivity {
                 dialogSettings.dismiss();
             }
         });
+
         btnEnter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -313,5 +324,37 @@ public class MainActivity extends AppCompatActivity {
         dialogSettings.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialogSettings.setCanceledOnTouchOutside(false);
         dialogSettings.show();
+    }
+
+    private void requestPhonePermission(){
+        if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_PHONE_STATE)){
+            new AlertDialog.Builder(this)
+                    .setTitle("Permission Needed")
+                    .setMessage("This permission is needed to Access System Settings")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions(MainActivity.this, PERMISSIONS, STORAGE_PERMISSION_CODE);
+                        }
+                    }). setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            }).create().show();
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, STORAGE_PERMISSION_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == STORAGE_PERMISSION_CODE){
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                Toast.makeText(this, "PERMISSION GRANTED", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "PERMISSION DENIED", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

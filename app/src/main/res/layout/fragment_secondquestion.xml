@@ -40,6 +40,7 @@
         android:layout_height="wrap_content" />
 
     <CheckBox
+        android:id="@+id/chckNo"
         android:textSize="24sp"
         android:typeface="serif"
         android:layout_marginLeft="40dp"

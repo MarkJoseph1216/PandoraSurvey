@@ -88,9 +88,6 @@ public class FirstSurvey extends AppCompatActivity {
 
         btnSubmit.setVisibility(View.INVISIBLE);
 
-
-        //checkNetworkStatus();
-
         imgName.startAnimation(AnimationUtils.loadAnimation(FirstSurvey.this, R.anim.lefttoright));
         inputFirst.startAnimation(AnimationUtils.loadAnimation(FirstSurvey.this, R.anim.fade_in));
         inputFirst.setVisibility(View.VISIBLE);
@@ -104,27 +101,33 @@ public class FirstSurvey extends AppCompatActivity {
          btnSubmit.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View v) {
+                     if (AppStatus.getInstance(FirstSurvey.this).isOnline())
+                     {
+                         fName = edtFirstName.getText().toString();
+                         lName = edtLastName.getText().toString();
+                         email = edtEmail.getText().toString();
+                         mobNo = edtMobile.getText().toString();
 
-                 fName = edtFirstName.getText().toString();
-                 lName = edtLastName.getText().toString();
-                 email = edtEmail.getText().toString();
-                 mobNo = edtMobile.getText().toString();
-
-                 if(fName.equals("")) {
-                     edtFirstName.setError("Required");
-                 }
-                 if(lName.equals("")) {
-                     edtLastName.setError("Required");
-                 }
-                 if(email.equals("")) {
-                     edtEmail.setError("Required");
-                 }
-                 else if(fName.equals("") && lName.equals("") && email.equals("")){
-                     Toast.makeText(FirstSurvey.this, "Field's Empty", Toast.LENGTH_SHORT).show();
-
-                 } else {
-                     getParseJSONRegister();
-                 }
+                         if(fName.equals("")) {
+                             edtFirstName.setError("Required");
+                         }
+                         if(lName.equals("")) {
+                             edtLastName.setError("Required");
+                         }
+                         if(email.equals("")) {
+                             edtEmail.setError("Required");
+                         }
+                         if(mobNo.length() < 11 && !mobNo.isEmpty()){
+                             edtMobile.setError("Invalid Mobile Number");
+                         }
+                         else if(fName.equals("") && lName.equals("") && email.equals("")){
+                             Toast.makeText(FirstSurvey.this, "Field's are Empty!", Toast.LENGTH_SHORT).show();
+                         } else {
+                             getParseJSONRegister();
+                         }
+                     } else {
+                         Toast.makeText(FirstSurvey.this,"You are not online, Please Activate your wifi/data first.",Toast.LENGTH_SHORT).show();
+                     }
              }
          });
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
@@ -203,16 +206,6 @@ public class FirstSurvey extends AppCompatActivity {
         bday = edtBirthDate.getText().toString();
     }
 
-    private void checkNetworkStatus()
-    {
-        if (AppStatus.getInstance(this).isOnline())
-        {
-            Toast.makeText(this,"You are online!!!!",Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this,"You are not online!!!!",Toast.LENGTH_SHORT).show();
-        }
-    }
-
     //Register Customer
     private void getParseJSONRegister() {
         StringRequest stringRequest = new StringRequest(
@@ -229,6 +222,7 @@ public class FirstSurvey extends AppCompatActivity {
                         String message = o.getString("message");
                         if(message.equals("success")){
                             Toast.makeText(FirstSurvey.this, "Submit Successful!" , Toast.LENGTH_SHORT).show();
+
                         }
                         else {
                             Toast.makeText(FirstSurvey.this, "" + message, Toast.LENGTH_SHORT).show();
