@@ -4,17 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    android:background="@color/white"
     tools:context="com.example.privateex.pandorasurvey.MainActivity">
 
    <ImageView
        android:id="@+id/imgLucerne"
-       android:layout_marginTop="70dp"
+       android:layout_marginTop="30dp"
        android:layout_alignParentTop="true"
        android:layout_centerInParent="true"
-       android:background="@drawable/pandoralogo"
-       android:layout_width="600dp"
-       android:layout_height="240dp" />
+       android:background="@drawable/pandoralogowhite"
+       android:layout_width="500dp"
+       android:layout_height="280dp" />
 
     <TextView
         android:typeface="serif"
@@ -35,7 +35,7 @@
         android:visibility="invisible"
         android:layout_above="@+id/btnGetStarted"
         android:id="@+id/loadingBar"
-        android:indeterminateTint="@color/white"
+        android:indeterminateTint="@color/black"
         android:layout_marginBottom="18dp"
         android:layout_centerInParent="true"
         android:layout_marginTop="10dp"
@@ -47,7 +47,7 @@
         android:visibility="invisible"
         android:typeface="serif"
         android:textStyle="bold"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textSize="18sp"
         android:text="Wait to proceed....."
         android:layout_centerInParent="true"
@@ -64,7 +64,7 @@
         android:id="@+id/btnGetStarted"
         android:text="GET STARTED"
         android:layout_centerInParent="true"
-        style="@style/ButtonBorder.Accent"
+        style="@style/ButtonBorder.AccentBlack"
         android:layout_below="@+id/imgLucerne"
         android:layout_width="240dp"
         android:layout_height="60dp" />
@@ -79,7 +79,7 @@
         android:textStyle="bold"
         android:typeface="serif"
         android:visibility="invisible"
-        style="@style/ButtonBorder.Accent"
+        style="@style/ButtonBorder.AccentBlack"
         android:text="SETTINGS"
         android:layout_height="60dp" />
 

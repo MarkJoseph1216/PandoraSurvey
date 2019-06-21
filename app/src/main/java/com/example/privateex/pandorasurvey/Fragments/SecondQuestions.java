@@ -16,19 +16,41 @@ import android.widget.Toast;
 
 import com.example.privateex.pandorasurvey.EndScreen;
 import com.example.privateex.pandorasurvey.R;
+import com.example.privateex.pandorasurvey.Survey.Survey;
+
+import java.util.Set;
 
 public class SecondQuestions extends Fragment {
 
     Button btnFinish;
-    CheckBox chckYes, chckNo;
+    CheckBox chckYes, chckNo, chckNewspaper, chckMagaxine, chckSocialMedia
+            , chckBillboard, chckFriendsFamily, chckStoreVisit;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_secondquestion, container, false);
 
+//        String facebook = "";
+//        String twitter = "";
+//        String snapchat = "";
+//        String instagram = "";
+//
+//        Set keys = Survey.hashMap.keySet();
+//
+//        Survey.hashMap.get("Facebook");
+//        Survey.hashMap.get("Facebook");
+//        Survey.hashMap.get("Facebook");
+//        Survey.hashMap.get("Facebook");
+
         btnFinish = (Button) view.findViewById(R.id.btnFinish);
         chckYes = (CheckBox) view.findViewById(R.id.chckYes);
         chckNo = (CheckBox) view.findViewById(R.id.chckNo);
+        chckNewspaper = (CheckBox) view.findViewById(R.id.chckNewsPaper);
+        chckMagaxine = (CheckBox) view.findViewById(R.id.chckMagazine);
+        chckSocialMedia = (CheckBox) view.findViewById(R.id.chckSocialMedia);
+        chckBillboard = (CheckBox) view.findViewById(R.id.chckBillboard);
+        chckFriendsFamily = (CheckBox) view.findViewById(R.id.chckFriendFamily);
+        chckStoreVisit = (CheckBox) view.findViewById(R.id.chckStoreVisit);
 
         btnFinish.setOnClickListener(new View.OnClickListener() {
             @Override

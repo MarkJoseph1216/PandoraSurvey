@@ -20,6 +20,8 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -70,6 +72,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
         btnGetStarted = (Button) findViewById(R.id.btnGetStarted);
@@ -93,6 +98,11 @@ public class MainActivity extends AppCompatActivity {
         //Animations
         imgLucerne.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.zoomin));
         btnSettings.setVisibility(View.INVISIBLE);
+
+        //Checking if the server is up
+        if(btnSettings.getVisibility() == View.INVISIBLE && btnGetStarted.getVisibility() == View.VISIBLE){
+            Toast.makeText(MainActivity.this, "Server Error!, Check your Internet Connection", Toast.LENGTH_LONG).show();
+        }
 
         //Getting IMEI Number
         telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
@@ -190,7 +200,6 @@ public class MainActivity extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("imei", IMEI_Number_Holder);
-
                 return params;
             }
         };
@@ -213,9 +222,7 @@ public class MainActivity extends AppCompatActivity {
                         String branch_code = details.getString("branch_code");
 
                         branchCodeArrayList.put(index, branch_code);
-
                         branchArray[index] = branch;
-
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -320,6 +327,7 @@ public class MainActivity extends AppCompatActivity {
         dialogSettings.show();
     }
 
+    //Checking Network Status
     private void checkNetworkStatus(){
         if (AppStatus.getInstance(this).isOnline()) {
             getParseJSONIMEI();

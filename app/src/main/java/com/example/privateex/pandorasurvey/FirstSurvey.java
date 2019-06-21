@@ -18,6 +18,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -45,6 +47,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FirstSurvey extends AppCompatActivity {
 
@@ -64,11 +68,16 @@ public class FirstSurvey extends AppCompatActivity {
     String mobNo = "";
     String bday = "";
     String email="";
+    int mYear, mMonth, mDay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_first_survey);
+
         btnSubmit = (Button) findViewById(R.id.btnSubmit);
 
         inputFirst = (TextInputLayout) findViewById(R.id.inputFirst);
@@ -130,6 +139,7 @@ public class FirstSurvey extends AppCompatActivity {
          btnSubmit.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View v) {
+
                  if (AppStatus.getInstance(FirstSurvey.this).isOnline())
                  {
                      fName = edtFirstName.getText().toString();
@@ -151,7 +161,14 @@ public class FirstSurvey extends AppCompatActivity {
                      }
                      else if(fName.equals("") && lName.equals("") && email.equals("")){
                          Toast.makeText(FirstSurvey.this, "Field's are Empty!", Toast.LENGTH_SHORT).show();
-                     } else {
+                     }
+
+                     Pattern pattern1 = Pattern.compile( "^([a-zA-Z0-9_.-])+@([a-zA-Z0-9_.-])+\\.([a-zA-Z])+([a-zA-Z])+");
+                     Matcher matcher1 = pattern1.matcher(email);
+                     if (!matcher1.matches()) {
+                         Toast.makeText(FirstSurvey.this, "Please input a Valid Email Address! ", Toast.LENGTH_SHORT).show();
+                     }
+                       else {
                          showPopupMessage();
                      }
                  } else {
@@ -200,9 +217,22 @@ public class FirstSurvey extends AppCompatActivity {
         edtBirthDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DatePickerDialog(FirstSurvey.this, date, myCalendar
-                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+//                new DatePickerDialog(FirstSurvey.this, date, myCalendar
+//                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+//                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                final Calendar c = Calendar.getInstance();
+                mYear = c.get(Calendar.YEAR);
+                mMonth = c.get(Calendar.MONTH);
+                mDay = c.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(FirstSurvey.this,
+                        android.R.style.Theme_Holo_Dialog_MinWidth, new android.app.DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year,int monthOfYear, int dayOfMonth) {
+                                edtBirthDate.setText(String.format("yyyy-MM-dd", year, (monthOfYear + 1), dayOfMonth));
+                            }
+                        }, mYear, mMonth, mDay);
+                datePickerDialog.show();
             }
         });
 
@@ -271,6 +301,7 @@ public class FirstSurvey extends AppCompatActivity {
                 new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+
                 try {
                     JSONArray jsonArray = new JSONArray(response);
                     for (int i = 0; i < jsonArray.length(); i++) {
@@ -279,19 +310,23 @@ public class FirstSurvey extends AppCompatActivity {
                         String message = o.getString("message");
 
                         if(message.equals("success")){
-                            Toast.makeText(FirstSurvey.this, "User not exist!!!" , Toast.LENGTH_SHORT).show();
-                            getParseJSONRegisterCustomer(fName,lName,email,mobNo,bday);
-
-                            Intent intent = new Intent(FirstSurvey.this, SecondSurvey.class);
-                            startActivity(intent);
+                            if(chckMs.isChecked()) {
+                                String checkMs = chckMs.getText().toString();
+                                getParseJSONRegisterCustomer(fName,lName,email,mobNo,bday,checkMs);
+                            }
+                            if(chckMrs.isChecked()) {
+                                String checkMrs = chckMrs.getText().toString();
+                                getParseJSONRegisterCustomer(fName,lName,email,mobNo,bday,checkMrs);
+                            }
+                            if(chckMr.isChecked()){
+                                String checkMr = chckMr.getText().toString();
+                                getParseJSONRegisterCustomer(fName,lName,email,mobNo,bday,checkMr);
+                            }
                         }
                         else {
                             Toast.makeText(FirstSurvey.this, "" + message, Toast.LENGTH_SHORT).show();
                             final Intent intent = new Intent(FirstSurvey.this, EndScreen.class);
                             startActivity(intent);
-
-
-
                         }
                     }
                 } catch (JSONException e) {
@@ -307,12 +342,14 @@ public class FirstSurvey extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
 
-                params.put("code", "default");
+                params.put("title", "default");
                 params.put("firstname", fName);
                 params.put("lastname", lName);
                 params.put("email", email);
                 params.put("mobile", mobNo);
                 params.put("birthday",bday);
+                params.put("created_at", "");
+                params.put("updated_at", "");
 
                 return params;
             }
@@ -322,7 +359,7 @@ public class FirstSurvey extends AppCompatActivity {
     }
 
     //Register new customer
-    private void getParseJSONRegisterCustomer(final String name, final String lastname,final String emailuser , final String no, final String date) {
+    private void getParseJSONRegisterCustomer(final String name, final String lastname,final String emailuser , final String no, final String date, final String checkMs) {
         StringRequest stringRequest = new StringRequest(
                 Request.Method.POST,
                 Survey.url_creater_new_costumer,
@@ -336,9 +373,10 @@ public class FirstSurvey extends AppCompatActivity {
                                 String message = o.getString("message");
 
                                 if(message.equals("success")){
-                                    Toast.makeText(FirstSurvey.this, "Succesfully Saved!!" , Toast.LENGTH_SHORT).show();
+                                   // Toast.makeText(FirstSurvey.this, "Succesfully Saved!!" , Toast.LENGTH_SHORT).show();
                                     final Intent intent = new Intent(FirstSurvey.this, SecondSurvey.class);
                                     startActivity(intent);
+                                    finish();
                                     ClearEditText();
                                 }
                                 else {
@@ -358,12 +396,14 @@ public class FirstSurvey extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
 
-                params.put("code", "default");
+                params.put("title",checkMs);
                 params.put("firstname", name);
                 params.put("lastname", lastname);
                 params.put("email", emailuser);
                 params.put("mobile", no);
                 params.put("birthday",date);
+                params.put("created_at","");
+                params.put("updated_at", "");
 
                 return params;
             }
@@ -403,6 +443,8 @@ public class FirstSurvey extends AppCompatActivity {
             }
         }
     }
+
+    //Clear All
     private void ClearEditText()
     {
         edtFirstName.setText("");
@@ -410,6 +452,9 @@ public class FirstSurvey extends AppCompatActivity {
         edtMobile.setText("");
         edtEmail.setText("");
         edtBirthDate.setText("");
+        chckMs.setChecked(false);
+        chckMrs.setChecked(false);
+        chckMr.setChecked(false);
     }
 
     //BackPressed Disabled

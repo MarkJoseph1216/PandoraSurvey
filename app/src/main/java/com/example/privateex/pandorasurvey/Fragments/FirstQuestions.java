@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -23,45 +24,77 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.privateex.pandorasurvey.MainActivity;
+import com.example.privateex.pandorasurvey.MySingleton;
 import com.example.privateex.pandorasurvey.R;
 import com.example.privateex.pandorasurvey.SecondSurvey;
+import com.example.privateex.pandorasurvey.Survey.Survey;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class FirstQuestions extends Fragment {
 
     Dialog dialogOthers;
-    CheckBox chckOthers;
+    CheckBox chckOthers, chckFacebook, chckInstagram ,chckTwitter ,chckSnapchat;
     ImageButton btnExit;
-    Button btnNext;
+    Button btnNext, btnSubmit;
     SecondSurvey secondSurvey;
-    TextView txtQuestion, txtTitle, txtQuestion2;
+    TextView txtPageNumber, txtTitle, txtQuestion2;
     LinearLayout layout, layout3, layout4;
+    TextView txtOthers;
+    TextInputEditText edtOthers;
+    String Facebook = "";
+    String Instagram = "";
+    String Twitter = "";
+    String Snapchat = "";
+    private RequestQueue requestQueue;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_firstquestion, container, false);
 
         chckOthers = (CheckBox) view.findViewById(R.id.chckOthers);
+        chckFacebook = (CheckBox) view.findViewById(R.id.chckFacebook);
+        chckInstagram = (CheckBox) view.findViewById(R.id.chckInstagram);
+        chckTwitter = (CheckBox) view.findViewById(R.id.chckTwitter);
+        chckSnapchat = (CheckBox) view.findViewById(R.id.chckSnapchat);
+
+        requestQueue = Volley.newRequestQueue(getContext());
+
         btnNext = (Button) view.findViewById(R.id.btnNext);
 
-        txtQuestion = (TextView) view.findViewById(R.id.txtQuestion);
         txtTitle = (TextView) view.findViewById(R.id.txtTitle);
         txtQuestion2 = (TextView) view.findViewById(R.id.txtQuestion2);
+        txtQuestion2 = (TextView) view.findViewById(R.id.txtQuestion2);
+        txtPageNumber = (TextView) view.findViewById(R.id.txtPageNumber);
 
         layout = (LinearLayout) view.findViewById(R.id.layout);
         layout3 = (LinearLayout) view.findViewById(R.id.layout3);
         layout4 = (LinearLayout) view.findViewById(R.id.layout4);
 
-        txtQuestion.setVisibility(View.INVISIBLE);
         txtTitle.setVisibility(View.INVISIBLE);
         layout.setVisibility(View.INVISIBLE);
+        txtPageNumber.setVisibility(View.INVISIBLE);
         txtQuestion2.setVisibility(View.INVISIBLE);
         layout3.setVisibility(View.INVISIBLE);
         layout4.setVisibility(View.INVISIBLE);
         btnNext.setVisibility(View.INVISIBLE);
 
-        txtQuestion.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.splash));
-        txtQuestion.setVisibility(View.VISIBLE);
+        txtPageNumber.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.splash));
+        txtPageNumber.setVisibility(View.VISIBLE);
+
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -126,18 +159,118 @@ public class FirstQuestions extends Fragment {
             }
         });
 
+        chckFacebook.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(chckFacebook.isChecked()){
+                    Facebook = "true";
+                }
+                else {
+                    Facebook = "false";
+                }
+            }
+        });
+        chckInstagram.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(chckInstagram.isChecked()){
+                    Instagram = "true";
+                }
+                else {
+                    Instagram = "false";
+                }
+            }
+        });
+        chckTwitter.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(chckTwitter.isChecked()){
+                    Twitter = "true";
+                }
+                else {
+                    Twitter = "false";
+                }
+            }
+        });
+        chckSnapchat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(chckSnapchat.isChecked()){
+                    Snapchat = "true";
+                }
+                else {
+                    Snapchat = "false";
+                }
+            }
+        });
+//            Survey.hashMap.put("Facebook", facebook);
+//            Survey.hashMap.put("Instagram", Instagram);
+//            Survey.hashMap.put("Twitter", Twitter);
+//            Survey.hashMap.put("Snapchat", Snapchat);
+        //}
+
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SendingJSON();
                 secondSurvey.viewPager.setCurrentItem(2);
             }
         });
         return view;
     }
 
+    public void SendingJSON(){
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, Survey.url_survey, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONArray jsonArray = new JSONArray(response);
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject o = jsonArray.getJSONObject(i);
+
+                            String message = o.getString("message");
+                            if(message.equals("success")){
+                                Toast.makeText(getContext(), "Registered Successful!", Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    error.printStackTrace();
+                }
+            }) {
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("facebook", Facebook);
+
+                    return params;
+                }
+            };
+            MySingleton.getInstance(getContext()).addToRequestque(stringRequest);
+            requestQueue.add(stringRequest);
+    }
+
     public void showPopupMessage1() {
         dialogOthers.setContentView(R.layout.dialog_others);
         btnExit = (ImageButton) dialogOthers.findViewById(R.id.btnExit);
+        btnSubmit = (Button) dialogOthers.findViewById(R.id.btnSubmitReason);
+        edtOthers = (TextInputEditText) dialogOthers.findViewById(R.id.edtOthers);
+
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String edtothers = edtOthers.getText().toString();
+                txtOthers.setText(edtothers);
+                dialogOthers.dismiss();
+            }
+        });
 
         btnExit.setOnClickListener(new View.OnClickListener() {
             @Override
