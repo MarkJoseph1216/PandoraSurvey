@@ -40,7 +40,7 @@
                 android:typeface="serif"
                 android:layout_alignParentTop="true"
                 android:layout_centerInParent="true"
-                android:text="Other Reason"
+                android:text="Other Social Media Account"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             
@@ -83,7 +83,7 @@
                 android:textSize="24sp"
                 android:layout_toRightOf="@+id/imgReason"
                 android:typeface="serif"
-                android:text="Reason:"
+                android:text="Account:"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -99,7 +99,7 @@
                 android:typeface="serif"
                 android:fontFamily="serif"
                 android:textColorHint="@color/whiteGray"
-                android:hint="Write here your reason"
+                android:hint="Write here your account"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </android.support.design.widget.TextInputLayout>
