@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -180,6 +181,7 @@ public class MainActivity extends AppCompatActivity {
                             btnGetStarted.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.downtoup));
                             btnGetStarted.setVisibility(View.VISIBLE);
                             btnSettings.setVisibility(View.INVISIBLE);
+//
                         }
                         else if(message.equals("not found")){
                             btnSettings.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.downtoup));

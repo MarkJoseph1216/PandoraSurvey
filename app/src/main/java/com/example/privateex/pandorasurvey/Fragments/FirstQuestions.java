@@ -1,6 +1,7 @@
 package com.example.privateex.pandorasurvey.Fragments;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -47,7 +48,8 @@ import java.util.Map;
 public class FirstQuestions extends Fragment {
 
     Dialog dialogOthers;
-    CheckBox chckOthers, chckFacebook, chckInstagram ,chckTwitter ,chckSnapchat;
+    CheckBox chckOthers, chckFacebook, chckInstagram ,chckTwitter ,chckSnapchat, chckBracelet
+            ,chckCharm, chckNecklace, chckRing, chckEarrings;
     ImageButton btnExit;
     Button btnNext, btnSubmit;
     SecondSurvey secondSurvey;
@@ -55,10 +57,6 @@ public class FirstQuestions extends Fragment {
     LinearLayout layout, layout3, layout4;
     TextView txtOthers;
     TextInputEditText edtOthers;
-    String Facebook = "";
-    String Instagram = "";
-    String Twitter = "";
-    String Snapchat = "";
     private RequestQueue requestQueue;
 
     @Override
@@ -70,11 +68,17 @@ public class FirstQuestions extends Fragment {
         chckInstagram = (CheckBox) view.findViewById(R.id.chckInstagram);
         chckTwitter = (CheckBox) view.findViewById(R.id.chckTwitter);
         chckSnapchat = (CheckBox) view.findViewById(R.id.chckSnapchat);
+        chckCharm = (CheckBox) view.findViewById(R.id.chckCharm);
+        chckNecklace = (CheckBox) view.findViewById(R.id.chckNecklace);
+        chckRing = (CheckBox) view.findViewById(R.id.chckRing);
+        chckEarrings = (CheckBox) view.findViewById(R.id.chckEarrings);
+        chckBracelet = (CheckBox) view.findViewById(R.id.chckBracelet);
 
         requestQueue = Volley.newRequestQueue(getContext());
 
         btnNext = (Button) view.findViewById(R.id.btnNext);
 
+        txtOthers = (TextView) view.findViewById(R.id.txtOthers);
         txtTitle = (TextView) view.findViewById(R.id.txtTitle);
         txtQuestion2 = (TextView) view.findViewById(R.id.txtQuestion2);
         txtQuestion2 = (TextView) view.findViewById(R.id.txtQuestion2);
@@ -163,98 +167,114 @@ public class FirstQuestions extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(chckFacebook.isChecked()){
-                    Facebook = "true";
+                    Survey.Facebook = "true";
                 }
                 else {
-                    Facebook = "false";
+                    Survey.Facebook = "false";
                 }
             }
         });
+
         chckInstagram.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(chckInstagram.isChecked()){
-                    Instagram = "true";
+                    Survey.Instagram = "true";
                 }
                 else {
-                    Instagram = "false";
+                    Survey.Instagram = "false";
                 }
             }
         });
+
         chckTwitter.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(chckTwitter.isChecked()){
-                    Twitter = "true";
+                    Survey.Twitter = "true";
                 }
                 else {
-                    Twitter = "false";
+                    Survey.Twitter = "false";
                 }
             }
         });
+
         chckSnapchat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(chckSnapchat.isChecked()){
-                    Snapchat = "true";
+                    Survey.Snapchat = "true";
                 }
                 else {
-                    Snapchat = "false";
+                    Survey.Snapchat = "false";
                 }
             }
         });
-//            Survey.hashMap.put("Facebook", facebook);
-//            Survey.hashMap.put("Instagram", Instagram);
-//            Survey.hashMap.put("Twitter", Twitter);
-//            Survey.hashMap.put("Snapchat", Snapchat);
-        //}
+
+        chckBracelet.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(chckBracelet.isChecked()){
+                    Survey.Bracelet = "true";
+                }
+                else {
+                    Survey.Bracelet = "false";
+                }
+            }
+        });
+
+        chckCharm.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(chckCharm.isChecked()){
+                    Survey.Charm = "true";
+                }
+                else {
+                    Survey.Charm = "false";
+                }
+            }
+        });
+        chckNecklace.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(chckNecklace.isChecked()){
+                    Survey.Necklace = "true";
+                }
+                else {
+                    Survey.Necklace = "false";
+                }
+            }
+        });
+        chckRing.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(chckRing.isChecked()){
+                    Survey.Ring = "true";
+                }
+                else {
+                    Survey.Ring = "false";
+                }
+            }
+        });
+        chckEarrings.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(chckEarrings.isChecked()){
+                    Survey.Earrings = "true";
+                }
+                else {
+                    Survey.Earrings = "false";
+                }
+            }
+        });
 
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SendingJSON();
                 secondSurvey.viewPager.setCurrentItem(2);
             }
         });
         return view;
-    }
-
-    public void SendingJSON(){
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, Survey.url_survey, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    try {
-                        JSONArray jsonArray = new JSONArray(response);
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject o = jsonArray.getJSONObject(i);
-
-                            String message = o.getString("message");
-                            if(message.equals("success")){
-                                Toast.makeText(getContext(), "Registered Successful!", Toast.LENGTH_SHORT).show();
-                            }
-                            else {
-
-                            }
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    error.printStackTrace();
-                }
-            }) {
-                protected Map<String, String> getParams() throws AuthFailureError {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("facebook", Facebook);
-
-                    return params;
-                }
-            };
-            MySingleton.getInstance(getContext()).addToRequestque(stringRequest);
-            requestQueue.add(stringRequest);
     }
 
     public void showPopupMessage1() {
@@ -268,6 +288,7 @@ public class FirstQuestions extends Fragment {
             public void onClick(View v) {
                 String edtothers = edtOthers.getText().toString();
                 txtOthers.setText(edtothers);
+                Survey.Others = edtothers;
                 dialogOthers.dismiss();
             }
         });
