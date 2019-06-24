@@ -144,9 +144,10 @@
         android:layout_height="wrap_content" />
 
     <CheckBox
+        android:id="@+id/chckReadAgreement"
         android:textSize="20sp"
         android:typeface="serif"
-        android:text="Read Agreement"
+        android:text="Read/Accept Agreement"
         android:layout_marginBottom="30dp"
         android:layout_marginLeft="24dp"
         android:layout_alignParentBottom="true"

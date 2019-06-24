@@ -30,6 +30,7 @@
                 android:focusable="true"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
                 <ImageView
                     android:visibility="gone"
                     android:id="@+id/imgLucerne"
@@ -45,8 +46,8 @@
                     android:layout_marginRight="35dp"
                     android:id="@+id/layout"
                     android:orientation="horizontal"
-                    android:layout_marginTop="50dp"
-                    android:layout_below="@+id/imgLucerne"
+                    android:layout_marginTop="10dp"
+                    android:layout_below="@+id/inputMobile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -186,9 +187,9 @@
                     android:id="@+id/imgPhone"
                     android:background="@drawable/ic_phone_black_24dp"
                     android:layout_marginLeft="35dp"
-                    android:layout_marginTop="28sp"
-                    android:layout_below="@+id/imgEmail"
+                    android:layout_marginTop="70dp"
                     android:layout_width="60dp"
+                    android:layout_below="@+id/imgLucerne"
                     android:layout_height="55dp"/>
 
                 <android.support.design.widget.TextInputLayout
@@ -196,8 +197,8 @@
                     android:visibility="visible"
                     android:id="@+id/inputMobile"
                     android:layout_marginLeft="15dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_below="@+id/inputEmail"
+                    android:layout_marginTop="65dp"
+                    android:layout_below="@+id/imgLucerne"
                     android:layout_toRightOf="@+id/imgPhone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -211,10 +212,10 @@
                         android:backgroundTint="@color/black"
                         android:hint="Mobile Number"
                         android:singleLine="true"
+                        android:maxLength="13"
                         android:layout_width="match_parent"
                         android:inputType="phone|number"
                         android:imeOptions="actionDone"
-                        android:maxLength="11"
                         android:layout_height="match_parent" />
                 </android.support.design.widget.TextInputLayout>
 
@@ -224,7 +225,7 @@
                     android:layout_marginTop="25dp"
                     android:layout_marginLeft="35dp"
                     android:id="@+id/imgBirth"
-                    android:layout_below="@+id/imgPhone"
+                    android:layout_below="@+id/imgEmail"
                     android:layout_width="60dp"
                     android:layout_height="65dp" />
 
@@ -234,7 +235,7 @@
                     android:id="@+id/inputDate"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="20dp"
-                    android:layout_below="@+id/inputMobile"
+                    android:layout_below="@+id/inputEmail"
                     android:layout_toRightOf="@+id/imgBirth"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
