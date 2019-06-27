@@ -1,3 +1,24 @@
 <resources>
     <string name="app_name">Pandora Survey</string>
+
+    <string name="privacyandagreeement" >
+        Lucerne, acting as data controller, may use your personal data to provide services to you and to ensure that our services meet your expectations and our obligations. Providing information is purely voluntary and in no way connected to sales transactions.
+    </string>
+
+    <string name="privacyandagreeement1" >
+        We may also use the information that you provide and information collected in connection with any purchases and related requests made by you for marketing analysis, including the analysis of purchase preferences and trends to enhance the services outlined above.
+    </string>
+
+    <string name="privacyandagreeement2" >
+        Your data may be shared for these purposes with our trusted third party providers. We will endeavor to keep your data safe and be responsible when collecting the data.
+    </string>
+
+    <string name="privacyandagreeement3" >
+         At any time, you may request a copy of your personal data or request that your personal data be updated, amended or deleted by contacting us at any Lucerne store near you through the boutique manager. You may also contact us at any Lucerne store to request, without charges, that we no longer use your details or we do not contact you for marketing purposes anymore.
+    </string>
+
+    <string name="privacyandagreeement4" >
+        You may also have other rights under local law.
+    </string>
+
 </resources>

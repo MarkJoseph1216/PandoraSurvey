@@ -1,6 +1,7 @@
 package com.example.privateex.pandorasurvey;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ public class EndScreen extends AppCompatActivity {
 
     ImageView imgPandora;
     private RequestQueue requestQueue;
+    private StringRequest request;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +48,6 @@ public class EndScreen extends AppCompatActivity {
         requestQueue = Volley.newRequestQueue(EndScreen.this);
 
         JSONSendingSurvey();
-
 //        Thread timer = new Thread(){
 //            public void run(){
 //                try {
@@ -59,6 +60,8 @@ public class EndScreen extends AppCompatActivity {
 //            }
 //        }; timer.start();
     }
+
+    //Disable Back Pressed
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK){
@@ -69,22 +72,15 @@ public class EndScreen extends AppCompatActivity {
 
     //Sending User's Survey Information
     private void JSONSendingSurvey(){
-        StringRequest stringRequest = new StringRequest(
-                Request.Method.POST,
-                Survey.url_create_survey,
-                new Response.Listener<String>() {
+        request = new StringRequest(Request.Method.POST, Survey.url_create_survey, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try {
-                            JSONArray jsonArray = new JSONArray(response);
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject o = jsonArray.getJSONObject(i);
-                                String message = o.getString("message");
+                            JSONObject jsonObject = new JSONObject(response);
+                                String message = jsonObject.getString("message");
                                 if (message.equals("success")) {
+                                    JSONRequestEmail();
                                     Toast.makeText(EndScreen.this, "Successfully Upload!", Toast.LENGTH_SHORT).show();
-//                                    Intent intent = new Intent(EndScreen.this, EndScreen.class);
-//                                    startActivity(intent);
-//                                    finish();
 
                                     final Handler handler = new Handler();
                                     handler.postDelayed(new Runnable() {
@@ -95,10 +91,10 @@ public class EndScreen extends AppCompatActivity {
                                             finish();
                                         }
                                     }, 2000);
-                                } else {
+                                }
+                                else {
                                     Toast.makeText(EndScreen.this, "" + message, Toast.LENGTH_SHORT).show();
                                 }
-                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -112,6 +108,7 @@ public class EndScreen extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
 
+                params.put("cust_id", Survey.ID);
                 params.put("facebook", Survey.Facebook);
                 params.put("instagram", Survey.Instagram);
                 params.put("twitter", Survey.Twitter);
@@ -133,7 +130,40 @@ public class EndScreen extends AppCompatActivity {
                 return params;
             }
         };
-        MySingleton.getInstance(EndScreen.this).addToRequestque(stringRequest);
-        requestQueue.add(stringRequest);
+        requestQueue.add(request);
+    }
+
+    //Sending Email to Customers
+    private void JSONRequestEmail(){
+        request = new StringRequest(Request.Method.POST, Survey.url_request_email, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    String message = jsonObject.getString("message");
+                    if (message.equals("success")) {
+                    }
+                    else {
+                        Toast.makeText(EndScreen.this, "" + message, Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        }) {
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+
+                params.put("cust_id", Survey.ID);
+
+                return params;
+            }
+        };
+        requestQueue.add(request);
     }
 }

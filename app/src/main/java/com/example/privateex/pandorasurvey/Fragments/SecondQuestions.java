@@ -88,13 +88,11 @@ public class SecondQuestions extends Fragment {
             public void onClick(View v) {
                 if(chckReadAgreement.isChecked()){
                     btnFinish.setEnabled(true);
-                    //JSONSendingSurvey();
                     Intent intent = new Intent(getContext(), EndScreen.class);
                     startActivity(intent);
                     getActivity().finish();
                 }
                 else {
-                    btnFinish.setEnabled(false);
                     Toast.makeText(getContext(), "Please Read and Accept the terms and Agreement First!", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -204,6 +202,7 @@ public class SecondQuestions extends Fragment {
         btnAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(getContext(), "Accept Successfully!", Toast.LENGTH_SHORT).show();
                 btnFinish.setEnabled(true);
                 chckReadAgreement.setChecked(true);
                 dialog_agreement.dismiss();
@@ -213,7 +212,6 @@ public class SecondQuestions extends Fragment {
             @Override
             public void onClick(View v) {
                 chckReadAgreement.setChecked(false);
-                btnFinish.setEnabled(false);
                 dialog_agreement.dismiss();
             }
         });

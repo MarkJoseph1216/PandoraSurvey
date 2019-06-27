@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@drawable/lucernebg"
+    android:layout_height="match_parent"
+    tools:context=".EndScreen">
+
+    <RelativeLayout
+        android:background="@drawable/background"
+        android:layout_marginTop="50dp"
+        android:layout_marginStart="320dp"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/imgPandora"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"
+            android:background="@drawable/pandoralogo"
+            android:layout_width="400dp"
+            android:layout_height="130dp" />
+
+        <android.support.v7.widget.CardView
+            android:layout_alignParentBottom="true"
+            android:layout_margin="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="350dp">
+
+            <RelativeLayout
+                android:background="@drawable/lucernebg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/txtWelcome"
+                    android:textSize="36sp"
+                    android:layout_centerInParent="true"
+                    android:textStyle="bold"
+                    android:typeface="serif"
+                    android:layout_margin="80dp"
+                    android:textColor="@color/black"
+                    android:text="Thank you Mr. Sample for your participation! Hope to see you soon!"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+    </RelativeLayout>
+
+</RelativeLayout>
