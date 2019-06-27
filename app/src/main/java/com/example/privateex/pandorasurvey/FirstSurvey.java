@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
@@ -15,6 +16,7 @@ import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.transition.Explode;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -39,6 +41,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.privateex.pandorasurvey.Fragments.FirstQuestions;
 import com.example.privateex.pandorasurvey.Survey.*;
+import com.hbb20.CountryCodePicker;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -67,14 +70,20 @@ public class FirstSurvey extends AppCompatActivity {
     Button btnSubmit;
     CheckBox chckMs, chckMrs, chckMr;
     Dialog dialogMessage;
+    Dialog dialogDatePicker;
 
     String fName = "";
     String lName = "";
     String mobNo = "";
     String bday = "";
     String email = "";
-    int mYear, mMonth, mDay;
     String currentDateandTime;
+    String showError = "";
+
+    CountryCodePicker countryCodePicker;
+
+    Button btnCancelDatePicker, btnOkDatePicker;
+    DatePicker datePicker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +117,8 @@ public class FirstSurvey extends AppCompatActivity {
         chckMrs = (CheckBox) findViewById(R.id.chckMrs);
         chckMr = (CheckBox) findViewById(R.id.chckMr);
 
+        countryCodePicker = (CountryCodePicker) findViewById(R.id.countryCodePicker);
+
         inputFirst.setVisibility(View.INVISIBLE);
         inputLast.setVisibility(View.INVISIBLE);
         inputEmail.setVisibility(View.INVISIBLE);
@@ -128,6 +139,12 @@ public class FirstSurvey extends AppCompatActivity {
         myCalendar = Calendar.getInstance();
         requestQueue = Volley.newRequestQueue(this);
         dialogMessage = new Dialog(FirstSurvey.this);
+        dialogDatePicker = new Dialog(FirstSurvey.this);
+
+        //Getting Value from SharedPreference in MainActivity
+        SharedPreferences branches = FirstSurvey.this.getSharedPreferences("Branch", Context.MODE_PRIVATE);
+        String branchName = branches.getString("branchName", "");
+        Survey.branchName = branchName;
 
         new CheckInternet().execute();
 
@@ -141,6 +158,8 @@ public class FirstSurvey extends AppCompatActivity {
         imgPandora.startAnimation(myAnim);
         imgMobile.startAnimation(AnimationUtils.loadAnimation(FirstSurvey.this, R.anim.lefttoright));
         imgMobile.setVisibility(View.VISIBLE);
+        countryCodePicker.startAnimation(AnimationUtils.loadAnimation(FirstSurvey.this, R.anim.fade_in));
+        countryCodePicker.setVisibility(View.VISIBLE);
         inputMobile.startAnimation(AnimationUtils.loadAnimation(FirstSurvey.this, R.anim.fade_in));
         inputMobile.setVisibility(View.VISIBLE);
 
@@ -149,29 +168,36 @@ public class FirstSurvey extends AppCompatActivity {
             public void onClick(View v) {
 
                 if (AppStatus.getInstance(FirstSurvey.this).isOnline()) {
+                    Survey.countryCode = countryCodePicker.getFullNumberWithPlus();
                     fName = edtFirstName.getText().toString();
                     lName = edtLastName.getText().toString();
                     email = edtEmail.getText().toString();
                     mobNo = edtMobile.getText().toString();
+                   // String mobileNum = mobNo.substring(0, 2);
 
-                    if (fName.equals("")) {
+                    Pattern pattern1 = Pattern.compile("^([a-zA-Z0-9_.-])+@([a-zA-Z0-9_.-])+\\.([a-zA-Z])+([a-zA-Z])+");
+                    Matcher matcher1 = pattern1.matcher(email);
+
+                    if (fName.equals("") && lName.equals("") && email.equals("")) {
+                        Toast.makeText(FirstSurvey.this, "Field's are Empty!", Toast.LENGTH_SHORT).show();
+                    }
+                    if (mobNo.equals("")) {
+                        edtMobile.setError("Required");
+                    }
+                    else if (fName.equals("")) {
                         edtFirstName.setError("Required");
-                        if (lName.equals("")) {
-                            edtLastName.setError("Required");
-                        } else if (email.equals("")) {
-                            edtEmail.setError("Required");
-                        } else if (mobNo.equals("")) {
-                            edtMobile.setError("Required");
-                        } else if (mobNo.length() < 13 && !mobNo.isEmpty()) {
-                            edtMobile.setError("Invalid Mobile Number");
-                        } else if (fName.equals("") && lName.equals("") && email.equals("")) {
-                            Toast.makeText(FirstSurvey.this, "Field's are Empty!", Toast.LENGTH_SHORT).show();
-                        }
-                        Pattern pattern1 = Pattern.compile("^([a-zA-Z0-9_.-])+@([a-zA-Z0-9_.-])+\\.([a-zA-Z])+([a-zA-Z])+");
-                        Matcher matcher1 = pattern1.matcher(email);
-                         if (!matcher1.matches()) {
-                            Toast.makeText(FirstSurvey.this, "Please input a Valid Email Address! ", Toast.LENGTH_SHORT).show();
-                        }
+                    }
+                    else if (lName.equals("")) {
+                        edtLastName.setError("Required");
+                    }
+                    else if (email.equals("")) {
+                        edtEmail.setError("Required");
+                    }
+                    else if (mobNo.length() < 12 && !mobNo.isEmpty()) {
+                        edtMobile.setError("Invalid Mobile Number");
+                    }
+                    else if (!matcher1.matches()) {
+                        Toast.makeText(FirstSurvey.this, "Please input a Valid Email Address! ", Toast.LENGTH_SHORT).show();
                     }
                     else {
                         showPopupMessage();
@@ -215,6 +241,7 @@ public class FirstSurvey extends AppCompatActivity {
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -224,9 +251,36 @@ public class FirstSurvey extends AppCompatActivity {
         edtBirthDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DatePickerDialog(FirstSurvey.this,android.R.style.Theme_Holo_Light_Dialog_MinWidth, date, myCalendar
-                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+
+                showPopupDatePicker();
+
+//                final Calendar cldr = Calendar.getInstance();
+//                int day = cldr.get(Calendar.DAY_OF_MONTH);
+//                int month = cldr.get(Calendar.MONTH);
+//                int year = cldr.get(Calendar.YEAR);
+//
+//                DatePickerDialog datePickerDialog = new DatePickerDialog(FirstSurvey.this,
+//                        new DatePickerDialog.OnDateSetListener() {
+//                            @Override
+//                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+//                                edtBirthDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+//                            }
+//                        }, year, month, day);
+//                datePickerDialog.show();
+//                Calendar cal = Calendar.getInstance();
+//                int year = cal.get(Calendar.YEAR);
+//                int month = cal.get(Calendar.MONTH);
+//                int day = cal.get(Calendar.DAY_OF_MONTH);
+//
+//                DatePickerDialog dialog = new DatePickerDialog(FirstSurvey.this, android.R.style.Theme_Holo_Dialog_MinWidth,
+//                        date, year,month,day);
+//
+//                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//                dialog.show();
+
+//                new DatePickerDialog(FirstSurvey.this,android.R.style.Theme_Holo_Light_Dialog_MinWidth, date, myCalendar
+//                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+//                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
 //                final Calendar c = Calendar.getInstance();
 //                mYear = c.get(Calendar.YEAR);
 //                mMonth = c.get(Calendar.MONTH);
@@ -373,19 +427,54 @@ public class FirstSurvey extends AppCompatActivity {
 //    }
 
     private void getParseJSONRegister() {
-        request = new StringRequest(Request.Method.POST, Survey.sample_url, new Response.Listener<String>() {
+        request = new StringRequest(Request.Method.POST, Survey.url_creater_new_costumer, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
-                             if(jsonObject.names().get(0).equals("success")){
-                                    dialogMessage.dismiss();
-                                    ClearEditText();
-                                    final Intent intent = new Intent(FirstSurvey.this, SecondSurvey.class);
-                                    startActivity(intent);
-                                    finish();
-                    }   else {
-                        Toast.makeText(getApplicationContext(), "Error" +jsonObject.getString("error"), Toast.LENGTH_SHORT).show();
+                    String object = jsonObject.getString("message");
+                    String id = jsonObject.getString("id");
+                    Log.d("ID", id);
+
+                        if(object.equals("success")){
+                            dialogMessage.dismiss();
+                            ClearEditText();
+
+                            Intent intent = new Intent(FirstSurvey.this, SecondSurvey.class);
+                            Survey.ID = id;
+                            startActivity(intent);
+                            finish();
+                        }
+                        else if(object.equals("Welcome")){
+                            if(chckMs.isChecked()){
+                                dialogMessage.dismiss();
+                                Intent intent1 = new Intent(FirstSurvey.this, Welcome.class);
+                                intent1.putExtra("Title", chckMs.getText().toString());
+                                intent1.putExtra("Name", edtFirstName.getText().toString());
+                                startActivity(intent1);
+                                finish();
+                            } else if (chckMrs.isChecked()){
+                                dialogMessage.dismiss();
+                                Intent intent1 = new Intent(FirstSurvey.this, Welcome.class);
+                                intent1.putExtra("Title", chckMrs.getText().toString());
+                                intent1.putExtra("Name", edtFirstName.getText().toString());
+                                startActivity(intent1);
+                                finish();
+                            } else if (chckMr.isChecked()){
+                                dialogMessage.dismiss();
+                                Intent intent1 = new Intent(FirstSurvey.this, Welcome.class);
+                                intent1.putExtra("Title", chckMr.getText().toString());
+                                intent1.putExtra("Name", edtFirstName.getText().toString());
+                                startActivity(intent1);
+                                finish();
+                            } else {
+                                dialogMessage.dismiss();
+                                Intent intent1 = new Intent(FirstSurvey.this, Welcome.class);
+                                intent1.putExtra("Title", "");
+                                intent1.putExtra("Name", edtFirstName.getText().toString());
+                                startActivity(intent1);
+                                finish();
+                            }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -394,28 +483,25 @@ public class FirstSurvey extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
             }
         }){
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 HashMap<String,String> hashMap = new HashMap<String, String>();
 
+                hashMap.put("branch", Survey.branchName);
                 hashMap.put("title", Survey.title);
                 hashMap.put("firstname",edtFirstName.getText().toString());
                 hashMap.put("lastname",edtLastName.getText().toString());
                 hashMap.put("email",edtEmail.getText().toString());
-                hashMap.put("mobile",edtMobile.getText().toString());
+                hashMap.put("mobile", Survey.countryCode + " " + edtMobile.getText().toString());
                 hashMap.put("birthday",edtBirthDate.getText().toString());
-
 
                 return hashMap;
             }
         };
         requestQueue.add(request);
-
     }
-
     //Register new customer
 //    private void getParseJSONRegisterCustomer(final String name, final String lastname, final String emailuser, final String no, final String date, final String checkMs) {
 //        StringRequest stringRequest = new StringRequest(
@@ -526,6 +612,7 @@ public class FirstSurvey extends AppCompatActivity {
     //Show popupMessage when Submit
     private void showPopupMessage() {
         dialogMessage.setContentView(R.layout.message_layout);
+
         Thread timer = new Thread() {
             public void run() {
                 try {
@@ -533,7 +620,6 @@ public class FirstSurvey extends AppCompatActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
-                    //getParseJSONCheckCustomer();
                     getParseJSONRegister();
                 }
             }
@@ -542,5 +628,34 @@ public class FirstSurvey extends AppCompatActivity {
         dialogMessage.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialogMessage.setCanceledOnTouchOutside(false);
         dialogMessage.show();
+    }
+
+    //Show DatePicker
+    private void showPopupDatePicker() {
+        dialogDatePicker.setContentView(R.layout.showdatepicker);
+        datePicker = (DatePicker) dialogDatePicker.findViewById(R.id.datePicker);
+        btnCancelDatePicker = (Button) dialogDatePicker.findViewById(R.id.btnCancel);
+        btnOkDatePicker = (Button) dialogDatePicker.findViewById(R.id.btnOK);
+
+        btnOkDatePicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                edtBirthDate.setText(datePicker.getYear()+"/"+datePicker.getMonth()+"/"+datePicker.getDayOfMonth());
+                dialogDatePicker.dismiss();
+            }
+        });
+
+        btnCancelDatePicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogDatePicker.dismiss();
+            }
+        });
+
+
+
+
+        dialogDatePicker.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialogDatePicker.show();
     }
 }

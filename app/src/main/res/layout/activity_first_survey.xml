@@ -111,7 +111,8 @@
                             android:hint="First"
                             android:singleLine="true"
                             android:textSize="25sp"
-                            android:inputType="textCapWords"
+                            android:digits="0123456789,qwertzuiopasdfghjklyxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"
+                            android:inputType="textCapWords|text"
                             android:imeOptions="actionDone"
                             android:backgroundTint="@color/black"
                             android:textColorHint="@color/whiteGray"
@@ -137,7 +138,8 @@
                             android:imeOptions="actionDone"
                             android:textSize="25sp"
                             android:singleLine="true"
-                            android:inputType="textCapWords"
+                            android:digits="0123456789,qwertzuiopasdfghjklyxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"
+                            android:inputType="textCapWords|text"
                             android:textColorHint="@color/whiteGray"
                             android:backgroundTint="@color/black"
                             android:hint="Last"
@@ -175,6 +177,7 @@
                         android:textColorHint="@color/whiteGray"
                         android:backgroundTint="@color/black"
                         android:hint="Email"
+                        android:digits="0123456789@.,qwertzuiopasdfghjklyxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"
                         android:singleLine="true"
                         android:inputType="textEmailAddress"
                         android:imeOptions="actionDone"
@@ -192,6 +195,23 @@
                     android:layout_below="@+id/imgLucerne"
                     android:layout_height="55dp"/>
 
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cardView"
+                    android:layout_marginLeft="20.5dp"
+                    android:layout_marginTop="80dp"
+                    android:layout_below="@+id/imgLucerne"
+                    android:layout_toRightOf="@+id/imgPhone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                <com.hbb20.CountryCodePicker
+                    android:id="@+id/countryCodePicker"
+                    app:ccp_defaultNameCode="PH"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                </android.support.v7.widget.CardView>
+
                 <android.support.design.widget.TextInputLayout
                     android:theme="@style/TextInputLayoutAppearance"
                     android:visibility="visible"
@@ -199,7 +219,7 @@
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="65dp"
                     android:layout_below="@+id/imgLucerne"
-                    android:layout_toRightOf="@+id/imgPhone"
+                    android:layout_toRightOf="@+id/cardView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="35dp">
@@ -212,7 +232,7 @@
                         android:backgroundTint="@color/black"
                         android:hint="Mobile Number"
                         android:singleLine="true"
-                        android:maxLength="13"
+                        android:maxLength="12"
                         android:layout_width="match_parent"
                         android:inputType="phone|number"
                         android:imeOptions="actionDone"
@@ -272,6 +292,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_width="250dp"
                     android:layout_height="wrap_content" />
+
             </RelativeLayout>
         </RelativeLayout>
     </android.support.v7.widget.CardView>

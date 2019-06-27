@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -70,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
     String[] branchArray;
     String branch;
 
+    Dialog showError;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
         requestQueue = Volley.newRequestQueue(this);
         arrayBranches = new ArrayList<>();
         arrayBranchCode = new ArrayList<>();
+        showError = new Dialog(MainActivity.this);
 
         //Checking Internet Connection
         checkNetworkStatus();
@@ -99,11 +103,9 @@ public class MainActivity extends AppCompatActivity {
         //Animations
         imgLucerne.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.zoomin));
         btnSettings.setVisibility(View.INVISIBLE);
+        //btnGetStarted.setVisibility(View.INVISIBLE);
 
-        //Checking if the server is up
-        if(btnSettings.getVisibility() == View.INVISIBLE && btnGetStarted.getVisibility() == View.VISIBLE){
-            Toast.makeText(MainActivity.this, "Server Error!, Check your Internet Connection", Toast.LENGTH_LONG).show();
-        }
+        MainActivity.this.overridePendingTransition(R.anim.fadein_intent, R.anim.fadeout_intent);
 
         //Getting IMEI Number
         telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
@@ -196,7 +198,9 @@ public class MainActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Toast.makeText(MainActivity.this, "Server Error, Check your Internet Connection", Toast.LENGTH_SHORT).show();
                 error.printStackTrace();
+                showError();
             }
         }) {
             protected Map<String, String> getParams() throws AuthFailureError {
@@ -296,7 +300,9 @@ public class MainActivity extends AppCompatActivity {
         chooseBranch.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
                 branch = chooseBranch.getSelectedItem().toString();
+                Survey.branchName = chooseBranch.getSelectedItem().toString();
                 Survey.branchCode = branchCodeArrayList.get(chooseBranch.getSelectedItemPosition());
             }
             @Override
@@ -304,7 +310,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -317,6 +322,11 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 JSONSendingIMEIandBranch(IMEI_Number_Holder, Survey.branchCode);
+
+                SharedPreferences pref = getApplicationContext().getSharedPreferences("Branch", MODE_PRIVATE);
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putString("branchName", chooseBranch.getSelectedItem().toString());
+                editor.commit();
 
                 dialogSettings.dismiss();
                 btnSettings.setVisibility(View.INVISIBLE);
@@ -332,6 +342,10 @@ public class MainActivity extends AppCompatActivity {
     //Checking Network Status
     private void checkNetworkStatus(){
         if (AppStatus.getInstance(this).isOnline()) {
+//            //Checking if the server is up
+//            if(btnSettings.getVisibility() == View.INVISIBLE && btnGetStarted.getVisibility() == View.INVISIBLE){
+//                Toast.makeText(MainActivity.this, "Server Error!, Check your Internet Connection", Toast.LENGTH_LONG).show();
+//            }
             getParseJSONIMEI();
         } else {
             new AlertDialog.Builder(this)
@@ -351,5 +365,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }).create().show();
         }
+    }
+
+    private void showError() {
+        showError.setContentView(R.layout.message_error);
+
+        showError.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        showError.setCanceledOnTouchOutside(false);
+        showError.show();
     }
 }

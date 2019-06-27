@@ -22,7 +22,7 @@ class UsPhoneNumberFormatter implements TextWatcher {
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count,
                                   int after) {
-        if (after == 0 && s.toString().equals("1 ")) {
+        if (after == 0 && s.toString().equals("1")) {
             clearFlag = true;
         }
         mLastStartLocation = start;
@@ -98,11 +98,11 @@ class UsPhoneNumberFormatter implements TextWatcher {
         // The first 3 numbers beyond '1' must be enclosed in brackets "()"
         if (totalDigitCount - alreadyPlacedDigitCount > 3) {
             formattedString.append(allDigitString.substring(alreadyPlacedDigitCount,
-                    alreadyPlacedDigitCount + 4) + "-");
-            alreadyPlacedDigitCount += 4;
+                    alreadyPlacedDigitCount + 3) + "-");
+            alreadyPlacedDigitCount += 3;
         }
         // There must be a '-' inserted after the next 3 numbers
-        if (totalDigitCount - alreadyPlacedDigitCount > 4) {
+        if (totalDigitCount - alreadyPlacedDigitCount > 3) {
             formattedString.append(allDigitString.substring(
                     alreadyPlacedDigitCount, alreadyPlacedDigitCount + 3)
                     + "-");

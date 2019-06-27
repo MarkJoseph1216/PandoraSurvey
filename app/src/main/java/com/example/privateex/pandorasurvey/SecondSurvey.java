@@ -1,5 +1,6 @@
 package com.example.privateex.pandorasurvey;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.content.ContextCompat;
 
@@ -37,6 +38,8 @@ public class SecondSurvey extends AppCompatActivity {
 
         viewPager = (ViewPager) findViewById(R.id.v_flipper);
         sliderDotspanel = (LinearLayout) findViewById(R.id.SliderDots);
+
+        SecondSurvey.this.overridePendingTransition(R.anim.fadein_intent, R.anim.fadeout_intent);
 
         try {
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());

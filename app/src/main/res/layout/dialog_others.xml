@@ -91,13 +91,15 @@
             android:id="@+id/inputLayout"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="15dp"
-            android:layout_width="380dp"
+            android:layout_width="305dp"
             android:layout_height="wrap_content">
             
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/edtOthers"
                 android:typeface="serif"
                 android:fontFamily="serif"
+                android:digits="0123456789,qwertzuiopasdfghjklyxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"
+                android:inputType="textCapWords|text"
                 android:textColorHint="@color/whiteGray"
                 android:hint="Write here your account"
                 android:layout_width="match_parent"
@@ -110,6 +112,7 @@
                 android:textStyle="bold"
                 android:typeface="serif"
                 android:text="Submit "
+                android:textColor="@color/white"
                 android:background="@drawable/ripple"
                 android:layout_centerInParent="true"
                 android:layout_marginBottom="20dp"
