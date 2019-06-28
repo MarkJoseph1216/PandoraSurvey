@@ -31,7 +31,7 @@ public class Welcome extends AppCompatActivity {
 
         txtWelcomeName.setVisibility(View.INVISIBLE);
         imgPandora.startAnimation(AnimationUtils.loadAnimation(Welcome.this, R.anim.bounce));
-        txtWelcomeName.startAnimation(AnimationUtils.loadAnimation(Welcome.this, R.anim.fade_in));
+        txtWelcomeName.startAnimation(AnimationUtils.loadAnimation(Welcome.this, R.anim.rotate));
         txtWelcomeName.setVisibility(View.VISIBLE);
 
         Intent intent = getIntent();
@@ -50,7 +50,7 @@ public class Welcome extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-        }, 3000);
+        }, 3400);
     }
 
     @Override
