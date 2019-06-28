@@ -8,18 +8,17 @@
     tools:context="com.example.privateex.pandorasurvey.FirstSurvey">
 
     <android.support.v7.widget.CardView
-        android:elevation="8dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="60dp"
-        android:layout_marginRight="35dp"
-        android:layout_marginBottom="20dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <RelativeLayout
-            android:background="@color/black"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="60dp"
+            android:background="@color/white"
             android:focusable="true"
+            android:layout_marginBottom="20dp"
+            android:layout_marginRight="35dp"
             android:focusableInTouchMode="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -177,7 +176,7 @@
                         android:textColorHint="@color/whiteGray"
                         android:backgroundTint="@color/black"
                         android:hint="Email"
-                        android:digits="0123456789@.,qwertzuiopasdfghjklyxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"
+                        android:digits="0123456789@.,_qwertzuiopasdfghjklyxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"
                         android:singleLine="true"
                         android:inputType="textEmailAddress"
                         android:imeOptions="actionDone"
@@ -271,7 +270,7 @@
                         android:imeOptions="actionDone"
                         android:singleLine="true"
                         android:textSize="25sp"
-                        android:textColor="@color/whiteGray"
+                        android:textColor="@color/black"
                         android:textColorHint="@color/whiteGray"
                         android:backgroundTint="@color/black"
                         android:hint="Click here to pick a Birth Date"

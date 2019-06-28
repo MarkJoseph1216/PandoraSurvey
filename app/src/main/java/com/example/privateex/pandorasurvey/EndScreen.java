@@ -8,8 +8,10 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -31,6 +33,7 @@ import java.util.Map;
 public class EndScreen extends AppCompatActivity {
 
     ImageView imgPandora;
+    TextView txtThankyou;
     private RequestQueue requestQueue;
     private StringRequest request;
 
@@ -43,7 +46,13 @@ public class EndScreen extends AppCompatActivity {
         setContentView(R.layout.activity_end_screen);
 
         imgPandora = (ImageView) findViewById(R.id.imgPandora);
+        txtThankyou = (TextView) findViewById(R.id.txtThankyou);
         imgPandora.startAnimation(AnimationUtils.loadAnimation(EndScreen.this, R.anim.random));
+        final Animation myAnim = AnimationUtils.loadAnimation(EndScreen.this, R.anim.bounce);
+        txtThankyou.startAnimation(myAnim);
+        MyBounceInterpolator interpolator = new MyBounceInterpolator(0.2, 20);
+        myAnim.setInterpolator(interpolator);
+        txtThankyou.startAnimation(myAnim);
 
         requestQueue = Volley.newRequestQueue(EndScreen.this);
 
