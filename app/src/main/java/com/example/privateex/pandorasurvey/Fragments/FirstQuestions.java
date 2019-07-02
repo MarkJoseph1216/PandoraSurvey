@@ -302,6 +302,8 @@ public class FirstQuestions extends Fragment {
             }
         });
         dialogOthers.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialogOthers.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
         dialogOthers.setCanceledOnTouchOutside(false);
         dialogOthers.show();
     }

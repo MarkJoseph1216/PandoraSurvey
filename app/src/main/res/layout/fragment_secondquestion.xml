@@ -38,6 +38,7 @@
         android:textSize="24sp"
         android:typeface="serif"
         android:text="Yes"
+        android:buttonTint="@color/checkbox_filter_tint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
@@ -45,6 +46,7 @@
         android:id="@+id/chckNo"
         android:textSize="24sp"
         android:typeface="serif"
+        android:buttonTint="@color/checkbox_filter_tint"
         android:layout_marginLeft="40dp"
         android:layout_toRightOf="@+id/chckYes"
         android:layout_marginTop="20dp"
@@ -71,6 +73,7 @@
         android:layout_marginLeft="25dp"
         android:layout_below="@+id/txtQuestion3"
         android:text="Newspaper"
+        android:buttonTint="@color/checkbox_filter_tint"
         android:id="@+id/chckNewsPaper"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
@@ -78,6 +81,7 @@
     <CheckBox
         android:id="@+id/chckMagazine"
         android:textSize="24sp"
+        android:buttonTint="@color/checkbox_filter_tint"
         android:layout_marginLeft="25dp"
         android:layout_marginTop="20dp"
         android:layout_below="@+id/txtQuestion3"
@@ -89,6 +93,7 @@
     <CheckBox
         android:id="@+id/chckSocialMedia"
         android:textSize="24sp"
+        android:buttonTint="@color/checkbox_filter_tint"
         android:layout_marginLeft="64dp"
         android:layout_marginTop="20dp"
         android:layout_below="@+id/txtQuestion3"
@@ -100,6 +105,7 @@
     <CheckBox
         android:id="@+id/chckBillboard"
         android:textSize="24sp"
+        android:buttonTint="@color/checkbox_filter_tint"
         android:layout_marginLeft="26dp"
         android:layout_marginTop="15dp"
         android:layout_below="@+id/chckSocialMedia"
@@ -109,6 +115,7 @@
 
     <CheckBox
         android:textSize="24sp"
+        android:buttonTint="@color/checkbox_filter_tint"
         android:layout_marginTop="15dp"
         android:layout_marginLeft="52dp"
         android:layout_below="@+id/chckMagazine"
@@ -126,6 +133,7 @@
         android:layout_below="@+id/chckSocialMedia"
         android:textSize="24sp"
         android:text="Store Visit"
+        android:buttonTint="@color/checkbox_filter_tint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

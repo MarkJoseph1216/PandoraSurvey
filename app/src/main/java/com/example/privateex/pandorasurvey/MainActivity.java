@@ -335,6 +335,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         dialogSettings.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialogSettings.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
         dialogSettings.setCanceledOnTouchOutside(false);
         dialogSettings.show();
     }
