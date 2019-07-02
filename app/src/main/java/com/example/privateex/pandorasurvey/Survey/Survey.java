@@ -5,8 +5,8 @@ import android.app.Application;
 public class Survey extends Application {
 
     public static String host = "http://192.168.100.103:9090";
-    public static String hostDAN = "http://demo-pandora-survey.luxxeserver.com";
-   // public static String hostDAN = "http://192.168.100.102/pandora";
+   // public static String hostDAN = "http://demo-pandora-survey.luxxeserver.com";
+    public static String hostDAN = "http://192.168.100.108/pandora";
     //public static String hostARVS = "http://192.168.100.100";
 
     public static String url_branches = hostDAN + "/api/branches/branches.php";
@@ -21,6 +21,7 @@ public class Survey extends Application {
     public static String url_creater_new_costumer = hostDAN + "/api/survey/customer/create.php";
     public static String url_create_survey = hostDAN + "/api/survey/create.php";
     public static String url_request_email = hostDAN + "/api/survey/send_email.php";
+    public static String url_validate_number = hostDAN + "/api/survey/customer/check_mobile.php";
     public static String url_customer_branches = hostDAN + "/api/survey/customer/customer_branches.php";
     //public static String sample_url = hostARVS + "/arvs/user_control.php";
 

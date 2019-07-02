@@ -67,7 +67,7 @@ public class FirstSurvey extends AppCompatActivity {
     TextInputEditText edtFirstName, edtLastName, edtEmail, edtMobile, edtBirthDate;
     ImageView imgName, imgEmail, imgMobile, imgDate, imgPandora;
     Calendar myCalendar;
-    Button btnSubmit;
+    Button btnSubmit, btnConfirm;
     CheckBox chckMs, chckMrs, chckMr;
     Dialog dialogMessage;
     Dialog dialogDatePicker;
@@ -94,6 +94,7 @@ public class FirstSurvey extends AppCompatActivity {
         setContentView(R.layout.activity_first_survey);
 
         btnSubmit = (Button) findViewById(R.id.btnSubmit);
+        btnConfirm = (Button) findViewById(R.id.btnConfirm);
         imgPandora = (ImageView) findViewById(R.id.imgLucerne1);
 
         inputFirst = (TextInputLayout) findViewById(R.id.inputFirst);
@@ -135,6 +136,7 @@ public class FirstSurvey extends AppCompatActivity {
         imgDate.setVisibility(View.INVISIBLE);
 
         btnSubmit.setVisibility(View.INVISIBLE);
+        btnConfirm.setVisibility(View.INVISIBLE);
 
         myCalendar = Calendar.getInstance();
         requestQueue = Volley.newRequestQueue(this);
@@ -166,7 +168,6 @@ public class FirstSurvey extends AppCompatActivity {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (AppStatus.getInstance(FirstSurvey.this).isOnline()) {
                     Survey.countryCode = countryCodePicker.getFullNumberWithPlus();
                     fName = edtFirstName.getText().toString();
@@ -204,6 +205,19 @@ public class FirstSurvey extends AppCompatActivity {
                     }
                 } else {
                     Toast.makeText(FirstSurvey.this, "You are not online, Please Activate your wifi/data first.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Survey.countryCode = countryCodePicker.getFullNumberWithPlus();
+                String mobile = edtMobile.getText().toString();
+                if(mobile.equals("")){
+                    Toast.makeText(FirstSurvey.this, "Mobile Number is Empty! Please fill up to verify", Toast.LENGTH_SHORT).show();
+                } else {
+                    getParseJSONValidateMobile();
                 }
             }
         });
@@ -345,8 +359,8 @@ public class FirstSurvey extends AppCompatActivity {
         handler3.postDelayed(new Runnable() {
             @Override
             public void run() {
-                btnSubmit.startAnimation(AnimationUtils.loadAnimation(FirstSurvey.this, R.anim.downtoup));
-                btnSubmit.setVisibility(View.VISIBLE);
+                btnConfirm.startAnimation(AnimationUtils.loadAnimation(FirstSurvey.this, R.anim.downtoup));
+                btnConfirm.setVisibility(View.VISIBLE);
             }
         }, 1800);
 
@@ -490,12 +504,97 @@ public class FirstSurvey extends AppCompatActivity {
                 HashMap<String,String> hashMap = new HashMap<String, String>();
 
                 hashMap.put("branch", Survey.branchName);
+                hashMap.put("branch_code", Survey.branchCode);
                 hashMap.put("title", Survey.title);
                 hashMap.put("firstname",edtFirstName.getText().toString());
                 hashMap.put("lastname",edtLastName.getText().toString());
                 hashMap.put("email",edtEmail.getText().toString());
                 hashMap.put("mobile", Survey.countryCode + " " + edtMobile.getText().toString());
                 hashMap.put("birthday",edtBirthDate.getText().toString());
+
+                return hashMap;
+            }
+        };
+        requestQueue.add(request);
+    }
+
+    private void getParseJSONValidateMobile() {
+        request = new StringRequest(Request.Method.POST, Survey.url_validate_number, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONArray jsonArray = new JSONArray(response);
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject o = jsonArray.getJSONObject(i);
+                        String message = o.getString("message");
+
+                        JSONObject details = o.getJSONObject("details");
+                        String title = details.getString("title");
+                        String firstname = details.getString("firstname");
+                        String lastname = details.getString("lastname");
+                        String email = details.getString("email");
+                        String birthday = details.getString("birthday");
+
+                        if (message.equals("success")) {
+
+                            Toast.makeText(FirstSurvey.this, "Your account is already exists.", Toast.LENGTH_SHORT).show();
+                            if(title.equals("Ms.")){
+                                chckMs.setChecked(true);
+                            }
+                            else if(title.equals("Mrs.")){
+                                chckMrs.setChecked(true);
+                            }
+                            else if(title.equals("Mr.")){
+                                chckMr.setChecked(true);
+                            }
+                            else {
+                                chckMs.setChecked(false);
+                                chckMrs.setChecked(false);
+                                chckMr.setChecked(false);
+                            }
+                            edtFirstName.setText(firstname);
+                            edtLastName.setText(lastname);
+                            edtEmail.setText(email);
+                            edtBirthDate.setText(birthday);
+
+                            edtMobile.setEnabled(false);
+                            edtFirstName.setEnabled(false);
+                            edtLastName.setEnabled(false);
+                            edtEmail.setEnabled(false);
+                            edtBirthDate.setEnabled(false);
+                            chckMs.setClickable(false);
+                            chckMrs.setClickable(false);
+                            chckMr.setClickable(false);
+                            countryCodePicker.setCcpClickable(false);
+
+                            btnConfirm.setVisibility(View.INVISIBLE);
+                            btnSubmit.startAnimation(AnimationUtils.loadAnimation(FirstSurvey.this, R.anim.downtoup));
+                            btnSubmit.setVisibility(View.VISIBLE);
+
+                        } else if (message.equals("error")) {
+
+                            btnSubmit.startAnimation(AnimationUtils.loadAnimation(FirstSurvey.this, R.anim.downtoup));
+                            btnSubmit.setVisibility(View.VISIBLE);
+                            btnConfirm.setVisibility(View.INVISIBLE);
+
+                            Toast.makeText(FirstSurvey.this, "Not exists, must fill up the field's.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String,String> hashMap = new HashMap<String, String>();
+
+                hashMap.put("mobile", Survey.countryCode + " " + edtMobile.getText().toString());
 
                 return hashMap;
             }
