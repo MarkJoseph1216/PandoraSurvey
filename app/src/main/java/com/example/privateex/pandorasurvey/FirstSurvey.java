@@ -378,68 +378,6 @@ public class FirstSurvey extends AppCompatActivity {
 
         bday = edtBirthDate.getText().toString();
     }
-
-//    Check Customer if exist or not
-//    private void getParseJSONCheckCustomer() {
-//        StringRequest stringRequest = new StringRequest(
-//                Request.Method.POST,
-//                Survey.url_check_costumer,
-//                new Response.Listener<String>() {
-//                    @Override
-//                    public void onResponse(String response) {
-//                        try {
-//                            JSONArray jsonArray = new JSONArray(response);
-//                            for (int i = 0; i < jsonArray.length(); i++) {
-//                                JSONObject o = jsonArray.getJSONObject(i);
-//
-//                                String message = o.getString("message");
-//
-//                                if (message.equals("success")) {
-//                                    if (chckMs.isChecked()) {
-//                                        String checkMs = chckMs.getText().toString();
-//                                        getParseJSONRegisterCustomer(fName, lName, email, mobNo, bday, checkMs);
-//                                    }
-//                                    if (chckMrs.isChecked()) {
-//                                        String checkMrs = chckMrs.getText().toString();
-//                                        getParseJSONRegisterCustomer(fName, lName, email, mobNo, bday, checkMrs);
-//                                    }
-//                                    if (chckMr.isChecked()) {
-//                                        String checkMr = chckMr.getText().toString();
-//                                        getParseJSONRegisterCustomer(fName, lName, email, mobNo, bday, checkMr);
-//                                    }
-//                                } else {
-//                                    Toast.makeText(FirstSurvey.this, "" + message, Toast.LENGTH_SHORT).show();
-//                                    final Intent intent = new Intent(FirstSurvey.this, EndScreen.class);
-//                                    startActivity(intent);
-//                                }
-//                            }
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                error.printStackTrace();
-//            }
-//        }) {
-//            protected Map<String, String> getParams() throws AuthFailureError {
-//                Map<String, String> params = new HashMap<String, String>();
-//
-//                params.put("title", "default");
-//                params.put("firstname", fName);
-//                params.put("lastname", lName);
-//                params.put("email", email);
-//                params.put("mobile", mobNo);
-//                params.put("birthday", bday);
-//
-//                return params;
-//            }
-//        };
-//        MySingleton.getInstance(FirstSurvey.this).addToRequestque(stringRequest);
-//        requestQueue.add(stringRequest);
-//    }
-
     private void getParseJSONRegister() {
         request = new StringRequest(Request.Method.POST, Survey.url_creater_new_costumer, new Response.Listener<String>() {
             @Override
@@ -601,58 +539,7 @@ public class FirstSurvey extends AppCompatActivity {
         };
         requestQueue.add(request);
     }
-    //Register new customer
-//    private void getParseJSONRegisterCustomer(final String name, final String lastname, final String emailuser, final String no, final String date, final String checkMs) {
-//        StringRequest stringRequest = new StringRequest(
-//                Request.Method.POST,
-//                Survey.url_creater_new_costumer,
-//                new Response.Listener<String>() {
-//                    @Override
-//                    public void onResponse(String response) {
-//                        try {
-//                            JSONArray jsonArray = new JSONArray(response);
-//                            for (int i = 0; i < jsonArray.length(); i++) {
-//                                JSONObject o = jsonArray.getJSONObject(i);
-//                                String message = o.getString("message");
-//
-//                                if (message.equals("success")) {
-//                                    dialogMessage.dismiss();
-//                                    ClearEditText();
-//                                    final Intent intent = new Intent(FirstSurvey.this, SecondSurvey.class);
-//                                    startActivity(intent);
-//                                    finish();
-//                                } else {
-//                                    Toast.makeText(FirstSurvey.this, "" + message, Toast.LENGTH_SHORT).show();
-//                                }
-//                            }
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                error.printStackTrace();
-//            }
-//        }) {
-//            protected Map<String, String> getParams() throws AuthFailureError {
-//                Map<String, String> params = new HashMap<String, String>();
-//
-//                params.put("title", checkMs);
-//                params.put("firstname", name);
-//                params.put("lastname", lastname);
-//                params.put("email", emailuser);
-//                params.put("mobile", no);
-//                params.put("birthday", date);
-//                params.put("datecreated_at", currentDateandTime);
-//                params.put("dateupdated_at", currentDateandTime);
-//
-//                return params;
-//            }
-//        };
-//        MySingleton.getInstance(FirstSurvey.this).addToRequestque(stringRequest);
-//        requestQueue.add(stringRequest);
-//    }
+
 
     //Checking Internet Connection
     private class CheckInternet extends AsyncTask<Void, Void, Boolean> {

@@ -1,5 +1,11 @@
 package com.example.privateex.pandorasurvey;
-
+/**
+ * Created by chase on 6/11/19.
+ * HI CHASE EMPLOYEE. WE ARE ARVS, MARK AND DAN. DEVELOPERS OF THIS APPLICATION.
+ * DAN IS RESPONSIBLE FOR WEB BACKEND OF THIS PROJECT. THIS IS OUR VERY FIRST PROJECT AS
+ * ANDROID DEVELOPER AND WEB DEVELOPER. WE HOPE YOU MAKE IT BETTER SOMEDAY. GOODLUCK :)
+ *
+**/
 import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -178,12 +184,10 @@ public class MainActivity extends AppCompatActivity {
                         if(message.equals("success")){
                             String branchcode = o.getString("branch_code");
                             Survey.branchCode = branchcode;
-                            //Toast.makeText(MainActivity.this, Survey.branchCode, Toast.LENGTH_SHORT).show();
 
                             btnGetStarted.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.downtoup));
                             btnGetStarted.setVisibility(View.VISIBLE);
                             btnSettings.setVisibility(View.INVISIBLE);
-//
                         }
                         else if(message.equals("not found")){
                             btnSettings.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.downtoup));
@@ -344,10 +348,6 @@ public class MainActivity extends AppCompatActivity {
     //Checking Network Status
     private void checkNetworkStatus(){
         if (AppStatus.getInstance(this).isOnline()) {
-//            //Checking if the server is up
-//            if(btnSettings.getVisibility() == View.INVISIBLE && btnGetStarted.getVisibility() == View.INVISIBLE){
-//                Toast.makeText(MainActivity.this, "Server Error!, Check your Internet Connection", Toast.LENGTH_LONG).show();
-//            }
             getParseJSONIMEI();
         } else {
             new AlertDialog.Builder(this)
