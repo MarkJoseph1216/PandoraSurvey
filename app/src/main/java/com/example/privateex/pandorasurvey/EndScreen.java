@@ -91,6 +91,26 @@ public class EndScreen extends AppCompatActivity {
                                     JSONRequestEmail();
                                     Toast.makeText(EndScreen.this, "Successfully Upload!", Toast.LENGTH_SHORT).show();
 
+                                    Survey.Facebook = "false";
+                                    Survey.Instagram = "false";
+                                    Survey.Twitter = "false";
+                                    Survey.Snapchat = "false";
+                                    Survey.Bracelet = "false";
+                                    Survey.Charm = "false";
+                                    Survey.Necklace = "false";
+                                    Survey.Ring = "false";
+                                    Survey.Earrings = "false";
+                                    Survey.Others = "";
+                                    Survey.Gifts = "false";
+                                    Survey.countryCode = "";
+                                    Survey.Newspaper = "false";
+                                    Survey.Magazine = "false";
+                                    Survey.SocialMedia = "false";
+                                    Survey.Billboard = "false";
+                                    Survey.FriendFamily = "false";
+                                    Survey.StoreVisit = "false";
+                                    Survey.title = "";
+
                                     final Handler handler = new Handler();
                                     handler.postDelayed(new Runnable() {
                                         @Override

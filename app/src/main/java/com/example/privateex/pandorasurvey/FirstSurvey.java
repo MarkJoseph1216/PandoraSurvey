@@ -16,6 +16,7 @@ import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
 import android.transition.Explode;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -209,13 +210,30 @@ public class FirstSurvey extends AppCompatActivity {
             }
         });
 
+        edtMobile.addTextChangedListener(new TextWatcherExtended() {
+            @Override
+            public void afterTextChanged(Editable s, boolean backSpace) {
+                btnConfirm.setVisibility(View.VISIBLE);
+                btnSubmit.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+        });
+
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Survey.countryCode = countryCodePicker.getFullNumberWithPlus();
                 String mobile = edtMobile.getText().toString();
+
                 if(mobile.equals("")){
                     Toast.makeText(FirstSurvey.this, "Mobile Number is Empty! Please fill up to verify", Toast.LENGTH_SHORT).show();
+                }
+                else if (mobile.length() < 12) {
+                    edtMobile.setError("Invalid Mobile Number");
                 } else {
                     getParseJSONValidateMobile();
                 }
@@ -735,6 +753,8 @@ public class FirstSurvey extends AppCompatActivity {
         datePicker = (DatePicker) dialogDatePicker.findViewById(R.id.datePicker);
         btnCancelDatePicker = (Button) dialogDatePicker.findViewById(R.id.btnCancel);
         btnOkDatePicker = (Button) dialogDatePicker.findViewById(R.id.btnOK);
+
+        datePicker.init(1980, 00, 01, null);
 
         btnOkDatePicker.setOnClickListener(new View.OnClickListener() {
             @Override

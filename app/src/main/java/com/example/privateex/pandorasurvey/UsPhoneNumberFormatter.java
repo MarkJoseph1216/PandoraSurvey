@@ -22,9 +22,9 @@ class UsPhoneNumberFormatter implements TextWatcher {
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count,
                                   int after) {
-        if (after == 0 && s.toString().equals("1")) {
-            clearFlag = true;
-        }
+//        if (after == 0 && s.toString().equals("1")) {
+//            clearFlag = true;
+//        }
         mLastStartLocation = start;
         mLastBeforeText = s.toString();
     }
@@ -74,15 +74,15 @@ class UsPhoneNumberFormatter implements TextWatcher {
         // Now only digits are remaining
         String allDigitString = text.toString();
         int totalDigitCount = allDigitString.length();
-        if (totalDigitCount == 0
-                || (totalDigitCount > 11 && !allDigitString.startsWith("1"))
-                || totalDigitCount > 12) {
-            // May be the total length of input length is greater than the
-            // expected value so we'll remove all formatting
-            text.clear();
-            text.append(allDigitString);
-            return allDigitString;
-        }
+//        if (totalDigitCount == 0
+//                || (totalDigitCount > 11 && !allDigitString.startsWith("1"))
+//                || totalDigitCount > 12) {
+//            // May be the total length of input length is greater than the
+//            // expected value so we'll remove all formatting
+//            text.clear();
+//            text.append(allDigitString);
+//            return allDigitString;
+//        }
         int alreadyPlacedDigitCount = 0;
         // Only '1' is remaining and user pressed backspace and so we clear
         // the edit text.
@@ -91,10 +91,10 @@ class UsPhoneNumberFormatter implements TextWatcher {
             clearFlag = false;
             return "";
         }
-        if (allDigitString.startsWith("1")) {
-            formattedString.append("1 ");
-            alreadyPlacedDigitCount++;
-        }
+//        if (allDigitString.startsWith("1")) {
+//            formattedString.append("1 ");
+//            alreadyPlacedDigitCount++;
+//        }
         // The first 3 numbers beyond '1' must be enclosed in brackets "()"
         if (totalDigitCount - alreadyPlacedDigitCount > 3) {
             formattedString.append(allDigitString.substring(alreadyPlacedDigitCount,
