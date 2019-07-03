@@ -157,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
         btnSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                getJSONBranches();
                 showPopupMessageSettings();
             }
         });
@@ -198,9 +199,7 @@ public class MainActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(MainActivity.this, "Server Error, Check your Internet Connection", Toast.LENGTH_SHORT).show();
-                error.printStackTrace();
-                showError();
+
             }
         }) {
             protected Map<String, String> getParams() throws AuthFailureError {
@@ -237,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
+
             }
         });
         MySingleton.getInstance(MainActivity.this).addToRequestque(stringRequest);
@@ -269,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
+
             }
         }) {
             protected Map<String, String> getParams() throws AuthFailureError {
@@ -366,6 +365,9 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Please restart the app and activate your Internet Connection", Toast.LENGTH_SHORT).show();
                 }
             }).create().show();
+
+            Toast.makeText(MainActivity.this, "Server Error, Check your Internet Connection", Toast.LENGTH_SHORT).show();
+            showError();
         }
     }
 

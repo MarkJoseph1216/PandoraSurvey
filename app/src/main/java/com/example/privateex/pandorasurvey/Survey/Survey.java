@@ -5,8 +5,8 @@ import android.app.Application;
 public class Survey extends Application {
 
     public static String host = "http://192.168.100.103:9090";
-   // public static String hostDAN = "http://demo-pandora-survey.luxxeserver.com";
-    public static String hostDAN = "http://192.168.100.108/pandora";
+    public static String hostDAN = "http://demo-pandora-survey.luxxeserver.com";
+   // public static String hostDAN = "http://192.168.100.108/pandora";
     //public static String hostARVS = "http://192.168.100.100";
 
     public static String url_branches = hostDAN + "/api/branches/branches.php";
