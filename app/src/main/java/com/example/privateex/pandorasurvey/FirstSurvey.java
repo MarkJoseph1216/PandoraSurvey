@@ -60,7 +60,7 @@ import java.util.regex.Pattern;
 
 public class FirstSurvey extends AppCompatActivity {
 
-    private ProgressDialog progressDL;
+    private ProgressDialog pDialog;
     private RequestQueue requestQueue;
     private StringRequest request;
 
@@ -144,12 +144,16 @@ public class FirstSurvey extends AppCompatActivity {
         dialogMessage = new Dialog(FirstSurvey.this);
         dialogDatePicker = new Dialog(FirstSurvey.this);
 
+        pDialog = new ProgressDialog(FirstSurvey.this);
+
         //Getting Value from SharedPreference in MainActivity
         SharedPreferences branches = FirstSurvey.this.getSharedPreferences("Branch", Context.MODE_PRIVATE);
         String branchName = branches.getString("branchName", "");
         Survey.branchName = branchName;
 
         new CheckInternet().execute();
+
+        Survey.update = false;
 
         currentDateandTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 
@@ -169,7 +173,16 @@ public class FirstSurvey extends AppCompatActivity {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+//                pDialog.setMessage("Connecting...Please wait!!");
+//                pDialog.setTitle("Message");
+//                pDialog.setCancelable(false);
+//                pDialog.setIndeterminate(true);
+//                pDialog.show();
+
                 if (AppStatus.getInstance(FirstSurvey.this).isOnline()) {
+
                     Survey.countryCode = countryCodePicker.getFullNumberWithPlus();
                     fName = edtFirstName.getText().toString();
                     lName = edtLastName.getText().toString();
@@ -202,7 +215,9 @@ public class FirstSurvey extends AppCompatActivity {
                         Toast.makeText(FirstSurvey.this, "Please input a Valid Email Address! ", Toast.LENGTH_SHORT).show();
                     }
                     else {
-                        showPopupMessage();
+//                        getParseJSONRegister();
+                         //showPopupMessage();
+                        new RegisterNewCustomer().execute();
                     }
                 } else {
                     Toast.makeText(FirstSurvey.this, "You are not online, Please Activate your wifi/data first.", Toast.LENGTH_SHORT).show();
@@ -229,13 +244,17 @@ public class FirstSurvey extends AppCompatActivity {
                 Survey.countryCode = countryCodePicker.getFullNumberWithPlus();
                 String mobile = edtMobile.getText().toString();
 
-                if(mobile.equals("")){
-                    Toast.makeText(FirstSurvey.this, "Mobile Number is Empty! Please fill up to verify", Toast.LENGTH_SHORT).show();
-                }
-                else if (mobile.length() < 12) {
-                    edtMobile.setError("Invalid Mobile Number");
+                if (AppStatus.getInstance(FirstSurvey.this).isOnline()) {
+
+                    if (mobile.equals("")) {
+                        Toast.makeText(FirstSurvey.this, "Mobile Number is Empty! Please fill up to verify", Toast.LENGTH_SHORT).show();
+                    } else if (mobile.length() < 12) {
+                        edtMobile.setError("Invalid Mobile Number");
+                    } else {
+                        getParseJSONValidateMobile();
+                    }
                 } else {
-                    getParseJSONValidateMobile();
+                    Toast.makeText(FirstSurvey.this, "No Internet Connection, Please Enable your Data/Wifi!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -285,47 +304,6 @@ public class FirstSurvey extends AppCompatActivity {
             public void onClick(View v) {
 
                 showPopupDatePicker();
-
-//                final Calendar cldr = Calendar.getInstance();
-//                int day = cldr.get(Calendar.DAY_OF_MONTH);
-//                int month = cldr.get(Calendar.MONTH);
-//                int year = cldr.get(Calendar.YEAR);
-//
-//                DatePickerDialog datePickerDialog = new DatePickerDialog(FirstSurvey.this,
-//                        new DatePickerDialog.OnDateSetListener() {
-//                            @Override
-//                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-//                                edtBirthDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
-//                            }
-//                        }, year, month, day);
-//                datePickerDialog.show();
-//                Calendar cal = Calendar.getInstance();
-//                int year = cal.get(Calendar.YEAR);
-//                int month = cal.get(Calendar.MONTH);
-//                int day = cal.get(Calendar.DAY_OF_MONTH);
-//
-//                DatePickerDialog dialog = new DatePickerDialog(FirstSurvey.this, android.R.style.Theme_Holo_Dialog_MinWidth,
-//                        date, year,month,day);
-//
-//                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//                dialog.show();
-
-//                new DatePickerDialog(FirstSurvey.this,android.R.style.Theme_Holo_Light_Dialog_MinWidth, date, myCalendar
-//                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-//                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
-//                final Calendar c = Calendar.getInstance();
-//                mYear = c.get(Calendar.YEAR);
-//                mMonth = c.get(Calendar.MONTH);
-//                mDay = c.get(Calendar.DAY_OF_MONTH);
-//
-//                DatePickerDialog datePickerDialog = new DatePickerDialog(FirstSurvey.this,
-//                        android.R.style.Theme_Holo_Dialog_MinWidth, new android.app.DatePickerDialog.OnDateSetListener() {
-//                            @Override
-//                            public void onDateSet(DatePicker view, int year,int monthOfYear, int dayOfMonth) {
-//                                edtBirthDate.setText(String.format("yyyy-MM-dd", year, (monthOfYear + 1), dayOfMonth));
-//                            }
-//                        }, mYear, mMonth, mDay);
-//                datePickerDialog.show();
             }
         });
 
@@ -459,9 +437,13 @@ public class FirstSurvey extends AppCompatActivity {
 //    }
 
     private void getParseJSONRegister() {
+
         request = new StringRequest(Request.Method.POST, Survey.url_creater_new_costumer, new Response.Listener<String>() {
+
             @Override
             public void onResponse(String response) {
+
+
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     String object = jsonObject.getString("message");
@@ -472,10 +454,10 @@ public class FirstSurvey extends AppCompatActivity {
                             dialogMessage.dismiss();
                             ClearEditText();
 
-                            Intent intent = new Intent(FirstSurvey.this, SecondSurvey.class);
+                            showPopupMessage();
+
                             Survey.ID = id;
-                            startActivity(intent);
-                            finish();
+                   //         pDialog.dismiss();
                         }
                         else if(object.equals("Welcome")){
                             if(chckMs.isChecked()){
@@ -485,6 +467,7 @@ public class FirstSurvey extends AppCompatActivity {
                                 intent1.putExtra("Name", edtFirstName.getText().toString());
                                 startActivity(intent1);
                                 finish();
+                                pDialog.dismiss();
                             } else if (chckMrs.isChecked()){
                                 dialogMessage.dismiss();
                                 Intent intent1 = new Intent(FirstSurvey.this, Welcome.class);
@@ -492,6 +475,7 @@ public class FirstSurvey extends AppCompatActivity {
                                 intent1.putExtra("Name", edtFirstName.getText().toString());
                                 startActivity(intent1);
                                 finish();
+                                pDialog.dismiss();
                             } else if (chckMr.isChecked()){
                                 dialogMessage.dismiss();
                                 Intent intent1 = new Intent(FirstSurvey.this, Welcome.class);
@@ -499,6 +483,7 @@ public class FirstSurvey extends AppCompatActivity {
                                 intent1.putExtra("Name", edtFirstName.getText().toString());
                                 startActivity(intent1);
                                 finish();
+                                pDialog.dismiss();
                             } else {
                                 dialogMessage.dismiss();
                                 Intent intent1 = new Intent(FirstSurvey.this, Welcome.class);
@@ -506,15 +491,19 @@ public class FirstSurvey extends AppCompatActivity {
                                 intent1.putExtra("Name", edtFirstName.getText().toString());
                                 startActivity(intent1);
                                 finish();
+                                pDialog.dismiss();
                             }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    pDialog.dismiss();
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                pDialog.dismiss();
+                Toast.makeText(FirstSurvey.this, "Server Error! Please try again!", Toast.LENGTH_SHORT).show();
             }
         }){
             @Override
@@ -529,6 +518,7 @@ public class FirstSurvey extends AppCompatActivity {
                 hashMap.put("email",edtEmail.getText().toString());
                 hashMap.put("mobile", Survey.countryCode + " " + edtMobile.getText().toString());
                 hashMap.put("birthday",edtBirthDate.getText().toString());
+                hashMap.put("buying_for_others", "");
 
                 return hashMap;
             }
@@ -606,6 +596,7 @@ public class FirstSurvey extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Toast.makeText(FirstSurvey.this, "Server Error, Please try again!", Toast.LENGTH_SHORT).show();
             }
         }){
             @Override
@@ -619,58 +610,45 @@ public class FirstSurvey extends AppCompatActivity {
         };
         requestQueue.add(request);
     }
-    //Register new customer
-//    private void getParseJSONRegisterCustomer(final String name, final String lastname, final String emailuser, final String no, final String date, final String checkMs) {
-//        StringRequest stringRequest = new StringRequest(
-//                Request.Method.POST,
-//                Survey.url_creater_new_costumer,
-//                new Response.Listener<String>() {
-//                    @Override
-//                    public void onResponse(String response) {
-//                        try {
-//                            JSONArray jsonArray = new JSONArray(response);
-//                            for (int i = 0; i < jsonArray.length(); i++) {
-//                                JSONObject o = jsonArray.getJSONObject(i);
-//                                String message = o.getString("message");
-//
-//                                if (message.equals("success")) {
-//                                    dialogMessage.dismiss();
-//                                    ClearEditText();
-//                                    final Intent intent = new Intent(FirstSurvey.this, SecondSurvey.class);
-//                                    startActivity(intent);
-//                                    finish();
-//                                } else {
-//                                    Toast.makeText(FirstSurvey.this, "" + message, Toast.LENGTH_SHORT).show();
-//                                }
-//                            }
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                error.printStackTrace();
-//            }
-//        }) {
-//            protected Map<String, String> getParams() throws AuthFailureError {
-//                Map<String, String> params = new HashMap<String, String>();
-//
-//                params.put("title", checkMs);
-//                params.put("firstname", name);
-//                params.put("lastname", lastname);
-//                params.put("email", emailuser);
-//                params.put("mobile", no);
-//                params.put("birthday", date);
-//                params.put("datecreated_at", currentDateandTime);
-//                params.put("dateupdated_at", currentDateandTime);
-//
-//                return params;
-//            }
-//        };
-//        MySingleton.getInstance(FirstSurvey.this).addToRequestque(stringRequest);
-//        requestQueue.add(stringRequest);
-//    }
+
+    private class RegisterNewCustomer extends AsyncTask<Void, Void, Boolean> {
+        String errmsg = "";
+
+        @Override
+        protected void onPreExecute() {
+            pDialog.setMessage("Connecting...Please wait!!");
+            pDialog.setTitle("Message");
+            pDialog.setCancelable(false);
+            pDialog.setIndeterminate(true);
+            pDialog.show();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            boolean result = false;
+            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            if (activeNetwork != null) {
+                if (activeNetwork.isFailover()) errmsg = "Internet connection fail over.";
+                result = activeNetwork.isAvailable() || activeNetwork.isConnectedOrConnecting();
+            } else {
+                errmsg = "No internet connection!";
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean bResult) {
+            pDialog.dismiss();
+            if (!bResult) {
+                Toast.makeText(FirstSurvey.this, errmsg, Toast.LENGTH_SHORT).show();
+            }
+            else{
+                getParseJSONRegister();
+            }
+        }
+    }
 
     //Checking Internet Connection
     private class CheckInternet extends AsyncTask<Void, Void, Boolean> {
@@ -678,7 +656,7 @@ public class FirstSurvey extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            progressDL = ProgressDialog.show(FirstSurvey.this, "", "Checking internet connection.");
+            pDialog = ProgressDialog.show(FirstSurvey.this, "", "Checking internet connection.");
         }
 
         @Override
@@ -698,7 +676,7 @@ public class FirstSurvey extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Boolean bResult) {
-            progressDL.dismiss();
+            pDialog.dismiss();
             if (!bResult) {
                 Toast.makeText(FirstSurvey.this, errmsg, Toast.LENGTH_SHORT).show();
             }
@@ -737,7 +715,9 @@ public class FirstSurvey extends AppCompatActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
-                    getParseJSONRegister();
+                    Intent intent = new Intent(FirstSurvey.this, SecondSurvey.class);
+                    startActivity(intent);
+                    finish();
                 }
             }
         };
