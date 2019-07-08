@@ -50,5 +50,6 @@ public class Survey extends Application {
     public static String FriendFamily = "false";
     public static String StoreVisit = "false";
 
-//  public static String url_create_product = "http://192.168.100.100/arvs/create_newProd.php"
+   //Validation updates of data
+   public static boolean update;
 }
