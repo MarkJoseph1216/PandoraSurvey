@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
@@ -27,7 +28,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class EndScreen extends AppCompatActivity {
@@ -56,18 +60,12 @@ public class EndScreen extends AppCompatActivity {
 
         requestQueue = Volley.newRequestQueue(EndScreen.this);
 
+//
+//        Survey.AnswerSurvey.add("1");
+//        Survey.AnswerSurvey.add("2");
+//        Survey.AnswerSurvey.add("3");
+
         JSONSendingSurvey();
-//        Thread timer = new Thread(){
-//            public void run(){
-//                try {
-//                    sleep(2000);
-//                } catch (Exception e){
-//                    e.printStackTrace();
-//                }
-//                finally {
-//                }
-//            }
-//        }; timer.start();
     }
 
     //Disable Back Pressed
@@ -90,26 +88,6 @@ public class EndScreen extends AppCompatActivity {
                                 if (message.equals("success")) {
                                     JSONRequestEmail();
                                     Toast.makeText(EndScreen.this, "Successfully Upload!", Toast.LENGTH_SHORT).show();
-
-                                    Survey.Facebook = "false";
-                                    Survey.Instagram = "false";
-                                    Survey.Twitter = "false";
-                                    Survey.Snapchat = "false";
-                                    Survey.Bracelet = "false";
-                                    Survey.Charm = "false";
-                                    Survey.Necklace = "false";
-                                    Survey.Ring = "false";
-                                    Survey.Earrings = "false";
-                                    Survey.Others = "";
-                                    Survey.Gifts = "false";
-                                    Survey.countryCode = "";
-                                    Survey.Newspaper = "false";
-                                    Survey.Magazine = "false";
-                                    Survey.SocialMedia = "false";
-                                    Survey.Billboard = "false";
-                                    Survey.FriendFamily = "false";
-                                    Survey.StoreVisit = "false";
-                                    Survey.title = "";
 
                                     final Handler handler = new Handler();
                                     handler.postDelayed(new Runnable() {
@@ -138,24 +116,38 @@ public class EndScreen extends AppCompatActivity {
                 Map<String, String> params = new HashMap<String, String>();
 
                 params.put("cust_id", Survey.ID);
-                params.put("facebook", Survey.Facebook);
-                params.put("instagram", Survey.Instagram);
-                params.put("twitter", Survey.Twitter);
-                params.put("snapchat", Survey.Snapchat);
+                params.put("social_media_id", Survey.AnswerSurvey.toString());
                 params.put("others", Survey.Others);
-                params.put("bracelet", Survey.Bracelet);
-                params.put("charm", Survey.Charm);
-                params.put("necklace", Survey.Necklace);
-                params.put("ring", Survey.Ring);
-                params.put("earrings", Survey.Earrings);
-                params.put("gifts", Survey.Gifts);
-                params.put("newspaper", Survey.Newspaper);
-                params.put("magazine", Survey.Magazine);
-                params.put("social_media", Survey.SocialMedia);
-                params.put("billboard", Survey.Billboard);
-                params.put("friend_family", Survey.FriendFamily);
-                params.put("store_visit", Survey.StoreVisit);
-
+                params.put("product_id", Survey.AnswerSurveyProducts.toString());
+                params.put("buying_for_others", Survey.Gifts);
+                params.put("ads_id", Survey.AnswerSurveyAds.toString());
+//                JSONObject jsonObject = null;
+//                JSONArray jsonArray=new JSONArray();
+//                for (int i = 0; i < AnswerSurvey.size(); i++) {
+//                    jsonObject = new JSONObject();
+//                    try {
+//
+//                        jsonObject.put("truckType",AnswerSurvey.get(i).toString());
+//
+//                        jsonArray.put(jsonObject);
+//
+//                        Log.d("Error", jsonObject.toString());
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//
+//                JSONArray list = new JSONArray();
+//                for(int i =0; i<AnswerSurvey.size();i++) {
+//                    JSONObject jrr = new JSONObject();
+//                    jrr.put();
+//                    list.put(jrr);
+//
+               // }
+             //   Log.d("JsonArray: ", list.toString());
+//                String jsonArrayString = list.toString();
+//                params.put("social_media_id", "1");
+////                params.put("social_media_id", "2");
                 return params;
             }
         };
@@ -188,7 +180,7 @@ public class EndScreen extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
 
-                params.put("cust_id", Survey.ID);
+                params.put("id", Survey.ID);
 
                 return params;
             }

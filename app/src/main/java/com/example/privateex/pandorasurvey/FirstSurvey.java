@@ -174,13 +174,6 @@ public class FirstSurvey extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-
-//                pDialog.setMessage("Connecting...Please wait!!");
-//                pDialog.setTitle("Message");
-//                pDialog.setCancelable(false);
-//                pDialog.setIndeterminate(true);
-//                pDialog.show();
-
                 if (AppStatus.getInstance(FirstSurvey.this).isOnline()) {
 
                     Survey.countryCode = countryCodePicker.getFullNumberWithPlus();
@@ -215,8 +208,7 @@ public class FirstSurvey extends AppCompatActivity {
                         Toast.makeText(FirstSurvey.this, "Please input a Valid Email Address! ", Toast.LENGTH_SHORT).show();
                     }
                     else {
-//                        getParseJSONRegister();
-                         //showPopupMessage();
+//
                         new RegisterNewCustomer().execute();
                     }
                 } else {
@@ -718,6 +710,7 @@ public class FirstSurvey extends AppCompatActivity {
                     Intent intent = new Intent(FirstSurvey.this, SecondSurvey.class);
                     startActivity(intent);
                     finish();
+                    dialogMessage.dismiss();
                 }
             }
         };

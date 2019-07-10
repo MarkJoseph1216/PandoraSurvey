@@ -9,6 +9,10 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,10 +31,17 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.privateex.pandorasurvey.Adapter.AdsRecycleViewAdapter;
+import com.example.privateex.pandorasurvey.Adapter.CategoriesRecyclerViewAdapter;
+import com.example.privateex.pandorasurvey.Adapter.ProductsRecycleViewAdapter;
+import com.example.privateex.pandorasurvey.Class.AdsClass;
+import com.example.privateex.pandorasurvey.Class.CategoriesClass;
+import com.example.privateex.pandorasurvey.Class.ProductsClass;
 import com.example.privateex.pandorasurvey.EndScreen;
 import com.example.privateex.pandorasurvey.FirstSurvey;
 import com.example.privateex.pandorasurvey.MySingleton;
 import com.example.privateex.pandorasurvey.R;
+import com.example.privateex.pandorasurvey.RecycleViewDecoration.RecyclerViewMargin;
 import com.example.privateex.pandorasurvey.SecondSurvey;
 import com.example.privateex.pandorasurvey.Survey.Survey;
 
@@ -38,6 +49,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -45,43 +58,39 @@ import java.util.Set;
 public class SecondQuestions extends Fragment {
 
     Button btnFinish;
-    CheckBox chckYes, chckNo, chckNewspaper, chckMagaxine, chckSocialMedia
-            , chckBillboard, chckFriendsFamily, chckStoreVisit, chckReadAgreement;
+    CheckBox chckYes, chckNo, chckReadAgreement;
     private RequestQueue requestQueue;
     Dialog dialog_agreement;
     Button btnAccept;
     ImageButton btnExit;
+    RecyclerView recyclerViewAds;
+    ArrayList<AdsClass> adsClasses;
+    AdsRecycleViewAdapter adsRecycleViewAdapter;
+
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_secondquestion, container, false);
 
-//        String facebook = "";
-//        String twitter = "";
-//        String snapchat = "";
-//        String instagram = "";
-//
-//        Set keys = Survey.hashMap.keySet();
-//
-//        Survey.hashMap.get("Facebook");
-//        Survey.hashMap.get("Facebook");
-//        Survey.hashMap.get("Facebook");
-//        Survey.hashMap.get("Facebook");
-
-
         btnFinish = (Button) view.findViewById(R.id.btnFinish);
         chckYes = (CheckBox) view.findViewById(R.id.chckYes);
         chckNo = (CheckBox) view.findViewById(R.id.chckNo);
-        chckNewspaper = (CheckBox) view.findViewById(R.id.chckNewsPaper);
-        chckMagaxine = (CheckBox) view.findViewById(R.id.chckMagazine);
-        chckSocialMedia = (CheckBox) view.findViewById(R.id.chckSocialMedia);
-        chckBillboard = (CheckBox) view.findViewById(R.id.chckBillboard);
-        chckFriendsFamily = (CheckBox) view.findViewById(R.id.chckFriendFamily);
-        chckStoreVisit = (CheckBox) view.findViewById(R.id.chckStoreVisit);
         chckReadAgreement = (CheckBox) view.findViewById(R.id.chckReadAgreement);
+        recyclerViewAds = (RecyclerView) view.findViewById(R.id.recycleViewAds);
+
+        recyclerViewAds.setHasFixedSize(true);
+        //recyclerViewAds.setLayoutManager(new LinearLayoutManager(getContext()));
+        final RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 4);
+        recyclerViewAds.setLayoutManager(layoutManager);
+        adsClasses = new ArrayList<>();
 
         requestQueue = Volley.newRequestQueue(getContext());
         dialog_agreement = new Dialog(getContext());
+
+        //Getting All the Ads Categories
+        getJSONAllCategories();
 
         btnFinish.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,6 +100,7 @@ public class SecondQuestions extends Fragment {
                     Intent intent = new Intent(getContext(), EndScreen.class);
                     startActivity(intent);
                     getActivity().finish();
+                   // Log.d("Array: ",Arrays.toString(AnswerSurvey.toArray()));
                 }
                 else {
                     Toast.makeText(getContext(), "Please Read and Accept the terms and Agreement First!", Toast.LENGTH_SHORT).show();
@@ -102,7 +112,7 @@ public class SecondQuestions extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked) {
-                    Survey.Gifts = "true";
+                    Survey.Gifts = "Yes";
                     chckNo.setChecked(false);
                 }
             }
@@ -111,72 +121,8 @@ public class SecondQuestions extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    Survey.Gifts = "false";
+                    Survey.Gifts = "No";
                     chckYes.setChecked(false);
-                }
-            }
-        });
-
-        chckNewspaper.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    Survey.Newspaper = "true";
-                }
-                else {
-                    Survey.Newspaper = "false";
-                }
-            }
-        });
-
-        chckMagaxine.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    Survey.Magazine = "true";
-                } else {
-                    Survey.Magazine = "false";
-                }
-            }
-        });
-
-        chckSocialMedia.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    Survey.SocialMedia = "true";
-                } else {
-                    Survey.SocialMedia = "false";
-                }
-            }
-        });
-        chckBillboard.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    Survey.Billboard = "true";
-                } else {
-                    Survey.Billboard = "false";
-                }
-            }
-        });
-        chckFriendsFamily.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    Survey.FriendFamily = "true";
-                } else {
-                    Survey.FriendFamily = "false";
-                }
-            }
-        });
-        chckStoreVisit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    Survey.StoreVisit = "true";
-                } else {
-                    Survey.StoreVisit = "false";
                 }
             }
         });
@@ -191,6 +137,42 @@ public class SecondQuestions extends Fragment {
         });
 
         return view;
+    }
+
+    //Getting All the Categories
+    public void getJSONAllCategories(){
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, Survey.url_fetch_categories, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    JSONArray jsonArrayProducts = jsonObject.getJSONArray("Ads");
+
+                    for (int index = 0; index < jsonArrayProducts.length(); index++) {
+                        JSONObject parentObjectAds = jsonArrayProducts.getJSONObject(index);
+
+                        //Getting for the Ads
+                        String id = parentObjectAds.getString("id");
+                        String categories = parentObjectAds.getString("category");
+
+                        adsClasses.add(new AdsClass(id, categories));
+                    }
+
+                    adsRecycleViewAdapter = new AdsRecycleViewAdapter(getContext(), adsClasses);
+                    recyclerViewAds.setAdapter(adsRecycleViewAdapter);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        MySingleton.getInstance(getContext()).addToRequestque(stringRequest);
+        requestQueue.add(stringRequest);
     }
 
     //Show Privacy Agreement
