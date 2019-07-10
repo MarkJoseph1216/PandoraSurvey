@@ -14,8 +14,8 @@ import java.util.ArrayList;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 
-    private ArrayList<Fragment> fragments;
-    private ArrayList<String> titles;
+    public ArrayList<Fragment> fragments;
+    public ArrayList<String> titles;
 
     ViewPagerAdapter(FragmentManager fm){
         super(fm);

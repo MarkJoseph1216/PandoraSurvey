@@ -98,7 +98,7 @@
                 android:typeface="serif"
                 android:imeOptions="actionDone"
                 android:fontFamily="serif"
-                android:digits="0123456789,qwertzuiopasdfghjklyxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"
+                android:digits="0123456789,space,qwertzuiopasdfghjklyxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"
                 android:inputType="textCapWords|text"
                 android:textColorHint="@color/whiteGray"
                 android:hint="Write here your account"

@@ -31,159 +31,59 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <LinearLayout
-        android:id="@+id/layout"
-        android:layout_marginTop="15dp"
-        android:layout_below="@+id/txtTitle"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        <android.support.v7.widget.RecyclerView
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/txtTitle"
+            android:id="@+id/recycleSocialMedia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </android.support.v7.widget.RecyclerView>
 
     <CheckBox
-        android:layout_marginRight="15dp"
-        android:id="@+id/chckFacebook"
         android:textSize="24sp"
-        android:text="Facebook"
+        android:fontFamily="serif"
+        android:text="Others:"
+        android:layout_marginLeft="40dp"
         android:buttonTint="@color/checkbox_filter_tint"
-        android:layout_marginLeft="25dp"
-        android:typeface="serif"
+        android:id="@+id/chckOthers"
+        android:layout_marginTop="18dp"
+        android:layout_below="@+id/recycleSocialMedia"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <CheckBox
-        android:layout_marginRight="15dp"
-        android:text="Instagram"
-        android:id="@+id/chckInstagram"
-        android:typeface="serif"
+    <TextView
+        android:id="@+id/txtOthers"
+        android:layout_marginLeft="5dp"
         android:textSize="24sp"
-        android:buttonTint="@color/checkbox_filter_tint"
+        android:fontFamily="serif"
+        android:textColor="@color/black"
+        android:layout_toRightOf="@+id/chckOthers"
+        android:text="_____________"
+        android:layout_marginTop="17dp"
+        android:layout_below="@+id/recycleSocialMedia"
+        android:layout_toEndOf="@+id/chckOthers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-
-        <CheckBox
-            android:layout_marginRight="15dp"
-            android:text="Twitter"
-            android:id="@+id/chckTwitter"
-            android:typeface="serif"
-            android:textSize="24sp"
-            android:buttonTint="@color/checkbox_filter_tint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <CheckBox
-            android:layout_marginRight="15dp"
-            android:text="Snapchat"
-            android:id="@+id/chckSnapchat"
-            android:typeface="serif"
-            android:textSize="24sp"
-            android:buttonTint="@color/checkbox_filter_tint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <CheckBox
-            android:layout_marginRight="7dp"
-            android:text="Others:"
-            android:id="@+id/chckOthers"
-            android:typeface="serif"
-            android:textSize="24sp"
-            android:buttonTint="@color/checkbox_filter_tint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:textColor="@color/black"
-            android:textSize="24sp"
-            android:typeface="serif"
-            android:id="@+id/txtOthers"
-            android:text="_____________"
-            android:layout_marginRight="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
 
     <TextView
         android:id="@+id/txtQuestion2"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="18dp"
         android:textSize="26sp"
         android:textStyle="bold"
         android:typeface="serif"
         android:layout_marginLeft="25dp"
-        android:layout_below="@+id/layout"
+        android:layout_below="@+id/chckOthers"
         android:text="Which of these PANDORA products do you own:"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <LinearLayout
-        android:id="@+id/layout3"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycleProducts"
+        android:layout_marginTop="10dp"
         android:layout_below="@+id/txtQuestion2"
-        android:layout_marginTop="15dp"
-        android:layout_marginLeft="25dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-    <CheckBox
-        android:layout_marginRight="5dp"
-        android:text="Bracelet"
-        android:id="@+id/chckBracelet"
-        android:typeface="serif"
-        android:buttonTint="@color/checkbox_filter_tint"
-        android:textSize="24sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <CheckBox
-        android:textSize="24sp"
-        android:typeface="serif"
-        android:layout_marginLeft="23dp"
-        android:layout_below="@+id/txtQuestion2"
-        android:layout_toRightOf="@id/chckBracelet"
-        android:id="@+id/chckCharm"
-        android:text="Charm"
-        android:buttonTint="@color/checkbox_filter_tint"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <CheckBox
-        android:textSize="24sp"
-        android:typeface="serif"
-        android:layout_marginLeft="58dp"
-        android:layout_below="@+id/txtQuestion2"
-        android:id="@+id/chckNecklace"
-        android:layout_toRightOf="@+id/chckCharm"
-        android:text="Necklace"
-        android:buttonTint="@color/checkbox_filter_tint"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_below="@+id/layout3"
-        android:id="@+id/layout4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-    <CheckBox
-        android:id="@+id/chckRing"
-        android:text="Ring"
-        android:buttonTint="@color/checkbox_filter_tint"
-        android:textSize="24sp"
-        android:typeface="serif"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="25dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <CheckBox
-        android:textSize="24sp"
-        android:text="Earrings"
-        android:typeface="serif"
-        android:buttonTint="@color/checkbox_filter_tint"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="70dp"
-        android:layout_toRightOf="@+id/chckRing"
-        android:layout_below="@+id/chckCharm"
-        android:id="@+id/chckEarrings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    </LinearLayout>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
     <Button
         android:id="@+id/btnNext"

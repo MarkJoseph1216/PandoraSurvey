@@ -1,17 +1,15 @@
 package com.example.privateex.pandorasurvey.Fragments;
 
 import android.app.Dialog;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,14 +23,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.privateex.pandorasurvey.MainActivity;
+import com.example.privateex.pandorasurvey.Adapter.CategoriesRecyclerViewAdapter;
+import com.example.privateex.pandorasurvey.Adapter.ProductsRecycleViewAdapter;
+import com.example.privateex.pandorasurvey.Class.CategoriesClass;
+import com.example.privateex.pandorasurvey.Class.ProductsClass;
 import com.example.privateex.pandorasurvey.MySingleton;
 import com.example.privateex.pandorasurvey.R;
 import com.example.privateex.pandorasurvey.SecondSurvey;
@@ -42,37 +42,28 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 
 public class FirstQuestions extends Fragment {
 
     Dialog dialogOthers;
-    CheckBox chckOthers, chckFacebook, chckInstagram ,chckTwitter ,chckSnapchat, chckBracelet
-            ,chckCharm, chckNecklace, chckRing, chckEarrings;
     ImageButton btnExit;
     Button btnNext, btnSubmit;
     SecondSurvey secondSurvey;
     TextView txtPageNumber, txtTitle, txtQuestion2;
-    LinearLayout layout, layout3, layout4;
     TextView txtOthers;
     TextInputEditText edtOthers;
+    CheckBox chckOthers;
     private RequestQueue requestQueue;
+    private CategoriesRecyclerViewAdapter categoriesRecyclerViewAdapter;
+    private ProductsRecycleViewAdapter productsRecycleViewAdapter;
+    private ArrayList<CategoriesClass> categoriesClasses;
+    ArrayList<ProductsClass> productsClasses;
+    private RecyclerView recyclerViewSocialMedia, recycleProducts;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_firstquestion, container, false);
-
-        chckOthers = (CheckBox) view.findViewById(R.id.chckOthers);
-        chckFacebook = (CheckBox) view.findViewById(R.id.chckFacebook);
-        chckInstagram = (CheckBox) view.findViewById(R.id.chckInstagram);
-        chckTwitter = (CheckBox) view.findViewById(R.id.chckTwitter);
-        chckSnapchat = (CheckBox) view.findViewById(R.id.chckSnapchat);
-        chckCharm = (CheckBox) view.findViewById(R.id.chckCharm);
-        chckNecklace = (CheckBox) view.findViewById(R.id.chckNecklace);
-        chckRing = (CheckBox) view.findViewById(R.id.chckRing);
-        chckEarrings = (CheckBox) view.findViewById(R.id.chckEarrings);
-        chckBracelet = (CheckBox) view.findViewById(R.id.chckBracelet);
 
         requestQueue = Volley.newRequestQueue(getContext());
 
@@ -83,18 +74,30 @@ public class FirstQuestions extends Fragment {
         txtQuestion2 = (TextView) view.findViewById(R.id.txtQuestion2);
         txtQuestion2 = (TextView) view.findViewById(R.id.txtQuestion2);
         txtPageNumber = (TextView) view.findViewById(R.id.txtPageNumber);
+        chckOthers = (CheckBox) view.findViewById(R.id.chckOthers);
 
-        layout = (LinearLayout) view.findViewById(R.id.layout);
-        layout3 = (LinearLayout) view.findViewById(R.id.layout3);
-        layout4 = (LinearLayout) view.findViewById(R.id.layout4);
+        recyclerViewSocialMedia = (RecyclerView) view.findViewById(R.id.recycleSocialMedia);
+        recyclerViewSocialMedia.setHasFixedSize(true);
+        recyclerViewSocialMedia.setLayoutManager(new LinearLayoutManager(getContext()));
+        final RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 4);
+        recyclerViewSocialMedia.setLayoutManager(layoutManager);
+        categoriesClasses = new ArrayList<>();
+
+        recycleProducts = (RecyclerView) view.findViewById(R.id.recycleProducts);
+        recycleProducts.setHasFixedSize(true);
+        recycleProducts.setLayoutManager(new LinearLayoutManager(getContext()));
+        final RecyclerView.LayoutManager layoutManagerProduct = new GridLayoutManager(getContext(), 4);
+        recycleProducts.setLayoutManager(layoutManagerProduct);
+        productsClasses = new ArrayList<>();
 
         txtTitle.setVisibility(View.INVISIBLE);
-        layout.setVisibility(View.INVISIBLE);
         txtPageNumber.setVisibility(View.INVISIBLE);
+        chckOthers.setVisibility(View.INVISIBLE);
+        txtOthers.setVisibility(View.INVISIBLE);
         txtQuestion2.setVisibility(View.INVISIBLE);
-        layout3.setVisibility(View.INVISIBLE);
-        layout4.setVisibility(View.INVISIBLE);
         btnNext.setVisibility(View.INVISIBLE);
+        recyclerViewSocialMedia.setVisibility(View.INVISIBLE);
+        recycleProducts.setVisibility(View.INVISIBLE);
 
         txtPageNumber.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.splash));
         txtPageNumber.setVisibility(View.VISIBLE);
@@ -111,8 +114,18 @@ public class FirstQuestions extends Fragment {
         handler1.postDelayed(new Runnable() {
             @Override
             public void run() {
-                layout.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.lefttoright));
-                layout.setVisibility(View.VISIBLE);
+                recyclerViewSocialMedia.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.lefttoright));
+                recyclerViewSocialMedia.setVisibility(View.VISIBLE);
+            }
+        }, 1500);
+        final Handler handlers = new Handler();
+        handler1.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                chckOthers.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.lefttoright));
+                chckOthers.setVisibility(View.VISIBLE);
+                txtOthers.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.lefttoright));
+                txtOthers.setVisibility(View.VISIBLE);
             }
         }, 1500);
         final Handler handler2 = new Handler();
@@ -127,146 +140,24 @@ public class FirstQuestions extends Fragment {
         handler3.postDelayed(new Runnable() {
             @Override
             public void run() {
-                layout3.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.lefttoright));
-                layout3.setVisibility(View.VISIBLE);
+                recycleProducts.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.lefttoright));
+                recycleProducts.setVisibility(View.VISIBLE);
             }
         }, 1900);
         final Handler handler4 = new Handler();
         handler4.postDelayed(new Runnable() {
             @Override
             public void run() {
-                layout4.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.lefttoright));
-                layout4.setVisibility(View.VISIBLE);
-            }
-        }, 2100);
-        final Handler handler5= new Handler();
-        handler5.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                btnNext.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.downtoup));
+                btnNext.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.lefttoright));
                 btnNext.setVisibility(View.VISIBLE);
             }
-        }, 2300);
+        }, 2100);
 
         secondSurvey = new SecondSurvey();
         dialogOthers = new Dialog(getContext());
 
-        chckOthers.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(chckOthers.isChecked()){
-                    showPopupMessage1();
-                }
-                else {
-
-                }
-            }
-        });
-
-        chckFacebook.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(chckFacebook.isChecked()){
-                    Survey.Facebook = "true";
-                }
-                else {
-                    Survey.Facebook = "false";
-                }
-            }
-        });
-
-        chckInstagram.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(chckInstagram.isChecked()){
-                    Survey.Instagram = "true";
-                }
-                else {
-                    Survey.Instagram = "false";
-                }
-            }
-        });
-
-        chckTwitter.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(chckTwitter.isChecked()){
-                    Survey.Twitter = "true";
-                }
-                else {
-                    Survey.Twitter = "false";
-                }
-            }
-        });
-
-        chckSnapchat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(chckSnapchat.isChecked()){
-                    Survey.Snapchat = "true";
-                }
-                else {
-                    Survey.Snapchat = "false";
-                }
-            }
-        });
-
-        chckBracelet.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(chckBracelet.isChecked()){
-                    Survey.Bracelet = "true";
-                }
-                else {
-                    Survey.Bracelet = "false";
-                }
-            }
-        });
-
-        chckCharm.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(chckCharm.isChecked()){
-                    Survey.Charm = "true";
-                }
-                else {
-                    Survey.Charm = "false";
-                }
-            }
-        });
-        chckNecklace.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(chckNecklace.isChecked()){
-                    Survey.Necklace = "true";
-                }
-                else {
-                    Survey.Necklace = "false";
-                }
-            }
-        });
-        chckRing.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(chckRing.isChecked()){
-                    Survey.Ring = "true";
-                }
-                else {
-                    Survey.Ring = "false";
-                }
-            }
-        });
-        chckEarrings.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(chckEarrings.isChecked()){
-                    Survey.Earrings = "true";
-                }
-                else {
-                    Survey.Earrings = "false";
-                }
-            }
-        });
+        //Getting All the Categories
+        getJSONAllCategories();
 
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -274,7 +165,61 @@ public class FirstQuestions extends Fragment {
                 secondSurvey.viewPager.setCurrentItem(2);
             }
         });
+
+        chckOthers.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    showPopupMessage1();
+                }
+            }
+        });
         return view;
+    }
+
+    //Getting All the Categories
+    public void getJSONAllCategories(){
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, Survey.url_fetch_categories, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    JSONArray jsonArray = jsonObject.getJSONArray("Social Media");
+                    JSONArray jsonArrayProducts = jsonObject.getJSONArray("Products");
+
+                    for (int index = 0; index < jsonArray.length(); index++) {
+                        JSONObject parentObject = jsonArray.getJSONObject(index);
+                        JSONObject parentObjectProduct = jsonArrayProducts.getJSONObject(index);
+
+                        //Getting for the Social Media
+                        String id = parentObject.getString("id");
+                        String categories = parentObject.getString("category");
+
+                        //Getting for the Products
+                        String idProduct = parentObjectProduct.getString("id");
+                        String categoriesProduct = parentObjectProduct.getString("category");
+
+                        categoriesClasses.add(new CategoriesClass(id, categories));
+                        productsClasses.add(new ProductsClass(idProduct, categoriesProduct));
+                    }
+                    categoriesRecyclerViewAdapter = new CategoriesRecyclerViewAdapter(getContext(), categoriesClasses);
+                    recyclerViewSocialMedia.setAdapter(categoriesRecyclerViewAdapter);
+
+                    productsRecycleViewAdapter = new ProductsRecycleViewAdapter(getContext(), productsClasses);
+                    recycleProducts.setAdapter(productsRecycleViewAdapter);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        MySingleton.getInstance(getContext()).addToRequestque(stringRequest);
+        requestQueue.add(stringRequest);
     }
 
     public void showPopupMessage1() {
@@ -297,7 +242,6 @@ public class FirstQuestions extends Fragment {
             @Override
             public void onClick(View v) {
                 dialogOthers.dismiss();
-                chckOthers.setChecked(false);
 
             }
         });
