@@ -1,11 +1,11 @@
 package com.example.privateex.pandorasurvey;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
@@ -24,16 +24,13 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.privateex.pandorasurvey.Survey.Survey;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+@SuppressWarnings("ALL")
 public class EndScreen extends AppCompatActivity {
 
     ImageView imgPandora;
@@ -64,8 +61,18 @@ public class EndScreen extends AppCompatActivity {
 //        Survey.AnswerSurvey.add("1");
 //        Survey.AnswerSurvey.add("2");
 //        Survey.AnswerSurvey.add("3");
-
-        JSONSendingSurvey();
+        /**
+         * @author John Patrick S. Papares
+         * @since July 10, 2019 9:46PM PST
+         * This is a direct instantiation and execution of SendJsonViaThread().execute()
+         */
+        new SendJsonViaThread().execute(Survey.AnswerSurvey);
+        /**
+         * @author John Patrick S. Papares
+         * @since July 10, 2019 9:46PM PST
+         * I removed JSONSendingSurvey(); in line:75 because I add some parameters to this method.
+         */
+        //JSONSendingSurvey();
     }
 
     //Disable Back Pressed
@@ -77,36 +84,76 @@ public class EndScreen extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    //Sending User's Survey Information
-    private void JSONSendingSurvey(){
-        request = new StringRequest(Request.Method.POST, Survey.url_create_survey, new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                                String message = jsonObject.getString("message");
-                                if (message.equals("success")) {
-                                    JSONRequestEmail();
-                                    Toast.makeText(EndScreen.this, "Successfully Upload!", Toast.LENGTH_SHORT).show();
+    /**
+     * @author John Patrick S. Papares
+     * @since July 10, 2019 9:46 PST
+     * I add SendJsonViaThread class that extends an abstract class named AsyncTask
+     * to perform a process asynchronously.
+     */
+    @SuppressLint("StaticFieldLeak")
+    private class SendJsonViaThread extends AsyncTask<List<String>, Integer, String> {
 
-                                    final Handler handler = new Handler();
-                                    handler.postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Intent intent = new Intent(EndScreen.this, MainActivity.class);
-                                            startActivity(intent);
-                                            finish();
-                                        }
-                                    }, 2000);
-                                }
-                                else {
-                                    Toast.makeText(EndScreen.this, "" + message, Toast.LENGTH_SHORT).show();
-                                }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
+        @Override
+        protected String doInBackground(List<String>... arrayLists) {
+            for (String arrayContent : arrayLists[0]) {
+                JSONSendingSurvey(arrayContent);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            Toast.makeText(EndScreen.this, "Successfully Upload!", Toast.LENGTH_SHORT).show();
+            JSONRequestEmail();
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent = new Intent(EndScreen.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }, 2000);
+        }
+    }
+
+    //Sending User's Survey Information
+    /**
+     * @author John Patrick S. Papares
+     * I add some parameters to this method to make it reusable while loopong some POST in other thread.
+     * @param arrayContentToSend string from the List<String>
+     */
+    private void JSONSendingSurvey(final String arrayContentToSend){
+        request = new StringRequest(Request.Method.POST, Survey.url_create_survey, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                //region unused block of codes
+//                        try {
+//                            JSONObject jsonObject = new JSONObject(response);
+//                                String message = jsonObject.getString("message");
+//                                if (message.equals("success")) {
+//                                    //JSONRequestEmail();
+//                                    Toast.makeText(EndScreen.this, "Successfully Upload!", Toast.LENGTH_SHORT).show();
+//
+//                                    final Handler handler = new Handler();
+//                                    handler.postDelayed(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            Intent intent = new Intent(EndScreen.this, MainActivity.class);
+//                                            startActivity(intent);
+//                                            finish();
+//                                        }
+//                                    }, 2000);
+//                                }
+//                                else {
+//                                    Toast.makeText(EndScreen.this, "" + message, Toast.LENGTH_SHORT).show();
+//                                }
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+                //endregion
+            }
+        }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
@@ -116,7 +163,8 @@ public class EndScreen extends AppCompatActivity {
                 Map<String, String> params = new HashMap<String, String>();
 
                 params.put("cust_id", Survey.ID);
-                params.put("social_media_id", Survey.AnswerSurvey.toString());
+                //params.put("social_media_id", Survey.AnswerSurvey.toString());
+                params.put("social_media_id", arrayContentToSend);  //I change the string value of this.
                 params.put("others", Survey.Others);
                 params.put("product_id", Survey.AnswerSurveyProducts.toString());
                 params.put("buying_for_others", Survey.Gifts);
@@ -143,8 +191,8 @@ public class EndScreen extends AppCompatActivity {
 //                    jrr.put();
 //                    list.put(jrr);
 //
-               // }
-             //   Log.d("JsonArray: ", list.toString());
+                // }
+                //   Log.d("JsonArray: ", list.toString());
 //                String jsonArrayString = list.toString();
 //                params.put("social_media_id", "1");
 ////                params.put("social_media_id", "2");
