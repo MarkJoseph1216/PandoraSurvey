@@ -80,6 +80,7 @@ public class FirstSurvey extends AppCompatActivity {
     String email = "";
     String currentDateandTime;
     String showError = "";
+    String dateMonth, dateDay;
 
     CountryCodePicker countryCodePicker;
 
@@ -732,7 +733,18 @@ public class FirstSurvey extends AppCompatActivity {
         btnOkDatePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                edtBirthDate.setText(datePicker.getYear()+"/"+datePicker.getMonth()+"/"+datePicker.getDayOfMonth());
+                dateMonth = "";
+                dateDay = "";
+                int month = datePicker.getMonth();
+                int day = datePicker.getDayOfMonth();
+
+                if(month < 10){
+                    dateMonth = "0" + String.valueOf(month);
+                }
+                if(day < 10){
+                    dateDay = "0" + String.valueOf(day);
+                }
+                edtBirthDate.setText(datePicker.getYear()+"/"+dateMonth+"/"+dateDay);
                 dialogDatePicker.dismiss();
             }
         });
@@ -743,9 +755,6 @@ public class FirstSurvey extends AppCompatActivity {
                 dialogDatePicker.dismiss();
             }
         });
-
-
-
 
         dialogDatePicker.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialogDatePicker.show();

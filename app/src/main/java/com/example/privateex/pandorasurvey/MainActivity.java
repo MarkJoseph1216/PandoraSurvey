@@ -43,6 +43,7 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.privateex.pandorasurvey.Activity.EditProfileActivity;
 import com.example.privateex.pandorasurvey.Survey.Survey;
 
 import org.json.JSONArray;
@@ -56,7 +57,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
     ImageView imgLucerne;
-    Button btnGetStarted, btnSettings;
+    Button btnGetStarted, btnSettings, btnEditProfile;
     TextView txtSurvey, txtLoading;
     ProgressBar loadingBar;
     Dialog dialogSettings;
@@ -83,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
         btnGetStarted = (Button) findViewById(R.id.btnGetStarted);
         btnSettings = (Button) findViewById(R.id.btnSettings);
+        btnEditProfile = (Button) findViewById(R.id.btnEditProfile);
         imgLucerne = (ImageView) findViewById(R.id.imgLucerne);
         txtSurvey = (TextView) findViewById(R.id.txtSurvey);
         txtLoading = (TextView) findViewById(R.id.txtLoading);
@@ -103,7 +105,8 @@ public class MainActivity extends AppCompatActivity {
         //Animations
         imgLucerne.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.zoomin));
         btnSettings.setVisibility(View.INVISIBLE);
-        //btnGetStarted.setVisibility(View.INVISIBLE);
+        btnGetStarted.setVisibility(View.INVISIBLE);
+        btnEditProfile.setVisibility(View.INVISIBLE);
 
         MainActivity.this.overridePendingTransition(R.anim.fadein_intent, R.anim.fadeout_intent);
 
@@ -161,6 +164,14 @@ public class MainActivity extends AppCompatActivity {
                 showPopupMessageSettings();
             }
         });
+
+        btnEditProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, EditProfileActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     //Sending IMEI and Getting Branches
@@ -184,9 +195,18 @@ public class MainActivity extends AppCompatActivity {
                             btnGetStarted.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.downtoup));
                             btnGetStarted.setVisibility(View.VISIBLE);
                             btnSettings.setVisibility(View.INVISIBLE);
-//
+                            final Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    btnEditProfile.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.downtoup));
+                                    btnEditProfile.setVisibility(View.VISIBLE);
+                                }
+                            }, 150);
                         }
                         else if(message.equals("not found")){
+                            btnGetStarted.setVisibility(View.INVISIBLE);
+                            btnEditProfile.setVisibility(View.INVISIBLE);
                             btnSettings.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.downtoup));
                             btnSettings.setVisibility(View.VISIBLE);
                             getJSONBranches();

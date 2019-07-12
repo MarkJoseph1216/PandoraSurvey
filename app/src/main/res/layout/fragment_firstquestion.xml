@@ -60,7 +60,7 @@
         android:textColor="@color/black"
         android:layout_toRightOf="@+id/chckOthers"
         android:text="_____________"
-        android:layout_marginTop="17dp"
+        android:layout_marginTop="19dp"
         android:layout_below="@+id/recycleSocialMedia"
         android:layout_toEndOf="@+id/chckOthers"
         android:layout_width="wrap_content"
