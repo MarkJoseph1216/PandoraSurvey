@@ -15,6 +15,7 @@ import com.example.privateex.pandorasurvey.R;
 import com.example.privateex.pandorasurvey.Survey.Survey;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class AdsRecycleViewAdapter extends RecyclerView.Adapter<AdsRecycleViewAdapter.ViewHolder> {
 
@@ -44,8 +45,11 @@ public class AdsRecycleViewAdapter extends RecyclerView.Adapter<AdsRecycleViewAd
         holder.checkSocialMedia.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
+                if(isChecked){
                     Survey.AnswerSurveyAds.add(id);
+                }
+                else {
+                    Survey.AnswerSurveyAds.remove(id);
                 }
             }
         });

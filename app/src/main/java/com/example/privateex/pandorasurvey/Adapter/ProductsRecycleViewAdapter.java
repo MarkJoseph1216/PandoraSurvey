@@ -46,10 +46,10 @@ public class ProductsRecycleViewAdapter extends RecyclerView.Adapter<ProductsRec
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-
                     Survey.AnswerSurveyProducts.add(id);
-//                    }
-                  //  Toast.makeText(mcontext,Arrays.toString(Survey.AnswerSurvey.toArray()), Toast.LENGTH_SHORT).show();
+                 }
+                else {
+                    Survey.AnswerSurveyProducts.remove(id);
                 }
             }
         });

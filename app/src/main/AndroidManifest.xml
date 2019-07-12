@@ -17,7 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Welcome"></activity>
+        <activity android:name=".Activity.EditProfileActivity"
+            android:screenOrientation="landscape"> </activity>
+        <activity android:name=".Welcome" />
         <activity
             android:name=".SplashScreen"
             android:screenOrientation="landscape">

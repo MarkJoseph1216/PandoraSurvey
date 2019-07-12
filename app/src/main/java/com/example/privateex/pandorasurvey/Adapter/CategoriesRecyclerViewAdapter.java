@@ -49,6 +49,9 @@ public class CategoriesRecyclerViewAdapter extends RecyclerView.Adapter<Categori
                 if(isChecked) {
                     Survey.AnswerSurvey.add(id);
                 }
+                else {
+                    Survey.AnswerSurvey.remove(id);
+                }
             }
         });
     }

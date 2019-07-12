@@ -9,7 +9,7 @@
 
    <ImageView
        android:id="@+id/imgLucerne"
-       android:layout_marginTop="30dp"
+       android:layout_marginTop="10dp"
        android:layout_alignParentTop="true"
        android:layout_centerInParent="true"
        android:background="@drawable/pandoralogowhite"
@@ -56,7 +56,7 @@
         android:layout_height="wrap_content" />
 
     <Button
-        android:visibility="invisible"
+        android:visibility="visible"
         android:layout_marginLeft="287dp"
         android:textStyle="bold"
         android:typeface="serif"
@@ -78,9 +78,22 @@
         android:layout_centerInParent="true"
         android:textStyle="bold"
         android:typeface="serif"
-        android:visibility="invisible"
+        android:visibility="visible"
         style="@style/ButtonBorder.AccentBlack"
         android:text="SETTINGS"
         android:layout_height="60dp" />
+
+     <Button
+         android:id="@+id/btnEditProfile"
+         android:layout_marginBottom="10dp"
+         android:text="EDIT PROFILE"
+         style="@style/ButtonBorder.AccentBlack"
+         android:layout_marginTop="20dp"
+         android:layout_centerInParent="true"
+         android:layout_below="@+id/btnSettings"
+         android:textStyle="bold"
+         android:fontFamily="serif"
+         android:layout_width="240dp"
+         android:layout_height="60dp" />
 
 </RelativeLayout>
