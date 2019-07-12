@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     TextView txtSurvey, txtLoading;
     ProgressBar loadingBar;
     Dialog dialogSettings;
-    Button btnCancel, btnEnter;
+    Button btnCancel, btnEnter, btnOkay;
     Spinner chooseBranch;
     String IMEI_Number_Holder;
     TelephonyManager telephonyManager;
@@ -188,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.d("Message", message);
 
                         if(message.equals("success")){
+                            showError.dismiss();
                             String branchcode = o.getString("branch_code");
                             Survey.branchCode = branchcode;
                             //Toast.makeText(MainActivity.this, Survey.branchCode, Toast.LENGTH_SHORT).show();
@@ -219,7 +220,8 @@ public class MainActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                showError();
+                Toast.makeText(MainActivity.this, "Slow Internet/No Connection, Please Try Again!", Toast.LENGTH_SHORT).show();
             }
         }) {
             protected Map<String, String> getParams() throws AuthFailureError {
@@ -393,6 +395,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void showError() {
         showError.setContentView(R.layout.message_error);
+        btnOkay = (Button) showError.findViewById(R.id.btnOkay);
+
+        btnOkay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showError.dismiss();
+                getParseJSONIMEI();
+            }
+        });
 
         showError.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         showError.setCanceledOnTouchOutside(false);
