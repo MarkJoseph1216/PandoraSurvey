@@ -19,7 +19,9 @@ public class Survey extends Application {
     public static String url_create_survey = hostDAN + "/api/survey/create.php";
     public static String url_request_email = hostDAN + "/api/survey/send_email.php";
     public static String url_validate_number = hostDAN + "/api/survey/customer/check_mobile.php";
+    public static String url_check_profile = hostDAN + "/api/survey/customer/check_profile.php";
     public static String url_fetch_categories = hostDAN + "/api/survey/fetch_categories.php";
+    public static String url_update_profile = hostDAN + "/api/survey/customer/update_profile.php";
 
     public static String branchCode;
     public static String title = "";

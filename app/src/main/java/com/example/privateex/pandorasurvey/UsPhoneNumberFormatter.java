@@ -6,7 +6,7 @@ import android.widget.EditText;
 
 import java.lang.ref.WeakReference;
 
-class UsPhoneNumberFormatter implements TextWatcher {
+public class UsPhoneNumberFormatter implements TextWatcher {
 
     //This TextWatcher sub-class formats entered numbers as 1 (123) 456-7890
     private boolean mFormatting;    // this is a flag which prevents the

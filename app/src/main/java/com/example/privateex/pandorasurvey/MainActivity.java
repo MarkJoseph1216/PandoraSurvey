@@ -370,6 +370,7 @@ public class MainActivity extends AppCompatActivity {
 //                Toast.makeText(MainActivity.this, "Server Error!, Check your Internet Connection", Toast.LENGTH_LONG).show();
 //            }
             getParseJSONIMEI();
+
         } else {
             new AlertDialog.Builder(this)
                     .setCancelable(false)
@@ -389,7 +390,6 @@ public class MainActivity extends AppCompatActivity {
             }).create().show();
 
             Toast.makeText(MainActivity.this, "Server Error, Check your Internet Connection", Toast.LENGTH_SHORT).show();
-            showError();
         }
     }
 

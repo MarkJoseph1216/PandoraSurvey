@@ -496,7 +496,7 @@ public class FirstSurvey extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 pDialog.dismiss();
-                Toast.makeText(FirstSurvey.this, "Server Error! Please try again!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(FirstSurvey.this, "Server Error/Slow Connection, Please try again!", Toast.LENGTH_SHORT).show();
             }
         }){
             @Override
@@ -589,7 +589,7 @@ public class FirstSurvey extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(FirstSurvey.this, "Server Error, Please try again!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(FirstSurvey.this, "Server Error/Slow Connection, Please try again!", Toast.LENGTH_SHORT).show();
             }
         }){
             @Override
